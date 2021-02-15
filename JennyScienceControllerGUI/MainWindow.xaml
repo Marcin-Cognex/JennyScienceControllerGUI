@@ -1,0 +1,438 @@
+﻿<Window x:Name="MainWindow1" x:Class="JennyScienceControllerGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JennyScienceControllerGUI"
+        xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
+        
+        mc:Ignorable="d"
+        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <local:XenaxStageGUIControlVM/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <local:IsConnectedConverter x:Key="isConnectedConverter"/>
+        <local:IsUseConverter x:Key="inUseConverter"/>
+        <local:SlSpeedConverter x:Key="slSpeedConverter"/>
+        <local:TbSpeedConverter x:Key="tbSpeedConverter"/>
+        <local:SlAccConverter x:Key="slAccConverter"/>
+        <local:SlPositionLinConverter x:Key="slPositionLinConverter"/>
+        <local:TbAccConverter x:Key="tbAccConverter"/>
+        <local:TbPositionConverter x:Key="tbPositionConverter"/>
+        <local:ConnectStatusConverter x:Key="connectStatusConverter"/>
+        <local:StageTypeConverter x:Key="StageTypeConverter"/>
+        <Style x:Key="HeaderStyle" TargetType="Label">
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </Window.Resources>
+
+    
+    
+    <!--Default grid definition-->
+    <Grid Margin="0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55*"/>
+            <ColumnDefinition Width="266*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <ToggleButton x:Name="btnTopMost" Grid.Column="0" Content="Always on Top" Margin="5" Click="ToggleButton_Click"/>
+            <StatusBarItem Grid.Column="1" Name="StageConnectionStatus1" Content="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>
+            <StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
+        </StatusBar>
+
+
+        <!-- Default Tab Control-->
+        <TabControl x:Name="TabControlAll" Margin="0" Grid.Row="0" TabStripPlacement="Left" Grid.ColumnSpan="2">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="MinHeight" Value="50" />
+                    <Setter Property="MinWidth" Value="100" />
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Connection">
+                <!--Connection tab-->
+                <DockPanel Margin="10">
+                    <Label Content="Devices" DockPanel.Dock="Top" Style="{StaticResource HeaderStyle}"/>
+                    <!--Add device-->
+                    <StackPanel Margin="0 10 0 0" DockPanel.Dock="Bottom">
+                        <Label Content="Add new device" Style="{StaticResource HeaderStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0 0 5 0">
+                                <Label Content="Name"/>
+                                <TextBox Name="StageName" Padding="2" MinHeight="30"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5 0">
+                                <Label Content="Select type of stage"/>
+                                <ComboBox Name="StageType" MinHeight="30" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Rotation" HorizontalAlignment="Center" />
+                                    <ComboBoxItem Content="Linear" HorizontalAlignment="Center" />
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="5 0 0 0">
+                                <Label Content="IP address"/>
+                                <TextBox Name="StageIP" Padding="2" MinHeight="30" TextAlignment="Center" VerticalContentAlignment="Center" KeyUp="StageIP_KeyUp"/>
+                            </StackPanel>
+                        </Grid>
+                        <Button Name="AddStage"  Content="Add" Margin="0 10 0 0" MinHeight="30" VerticalContentAlignment="Center" Click="Add_Click"/>
+                    </StackPanel>
+                    <!--Buttons Connect, Remove-->
+                    <StackPanel Margin="0 10 0 0" DockPanel.Dock="Bottom">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="btnRemove" Grid.Column="0" Content="Remove" Margin="1,0,4,0" Height="30" VerticalContentAlignment="Center" Click="Remove_Click"/>
+                            <Button Name="btnDisconnect" Grid.Column="1" Content="Disconnect" Margin="5 0" Height="30" Click="BtnDisconnectConnection_Click" IsEnabled="{Binding Path=StageConnected}"/>
+                            <Button Name="btnConnect" Grid.Column="2" Content="Connect" Margin="5 0 0 0" Height="30" Click="BtnConnectConnection_Click" IsEnabled="{Binding Path=StageNotConnected}"/>
+                        </Grid>
+                    </StackPanel>
+                    <DataGrid Name="dgConnections" ItemsSource="{Binding}" MinHeight="90" AutoGenerateColumns="False" CanUserAddRows="false" MouseDoubleClick="dgConnections_MouseDoubleClick" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name"  Binding="{Binding stageName}" Width="1*"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding stageType,  Converter={StaticResource StageTypeConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="IPAddress"  Binding="{Binding stageIPAddress}" Width="1*"/>
+                            <DataGridTextColumn Header="Status"  Binding="{Binding stageConnectionStatus}" Width="1*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.RowHeight>30</DataGrid.RowHeight>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Linear Movement" IsEnabled="False">
+
+                <StackPanel MaxWidth="1000">
+                    <!--Units-->
+                    <Grid IsEnabled="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Name="UnitsInc" Grid.Column="0" Content="Inc" Margin="10,5" ToggleButton.Checked ="UnitsInc_Checked"/>
+                        <Button Name="UnitsMm" Grid.Column="1" Content="mm" Margin="10,5" ToggleButton.Checked="UnitsMm_Checked"/>
+                        <TextBox Grid.Column="2" Margin="10,5" MinWidth="10"/>
+                        <Label Grid.Column="3" HorizontalContentAlignment="Left">
+                            <Hyperlink>
+                                <ContentControl Content="Mass [g]"/>
+                            </Hyperlink>
+                        </Label>
+                    </Grid>
+                    <!--Speed acceleration-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Speed-->
+                        <Label Grid.Column="0" Grid.Row ="0" Content="Speed" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Grid.Column="3" Grid.Row ="0" Content="Inc/s"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Grid.Row ="0" Value="{Binding Path=StageSpeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource slSpeedConverter}}" IsMoveToPointEnabled="True" Margin="10,5" VerticalAlignment="Center" Ticks="" TickPlacement="TopLeft" Minimum="0" Maximum="100" TickFrequency="10" ValueChanged="SlSpeed_ValueChanged"/>
+                        <TextBox Grid.Column="2" Grid.Row ="0" Name="tbSpeedLin"  Text="{Binding Path=StageSpeed, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource tbSpeedConverter}}" HorizontalAlignment="Stretch" TextAlignment="Right" Width="120"  VerticalContentAlignment="Center" Margin="5" Keyboard.PreviewKeyDown="Tb_PreviewKeyDown"/>
+
+                        <!--Acceleration-->
+                        <Label Grid.Column="0" Grid.Row ="1"  Content="Acceleration" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Grid.Column="3" Grid.Row ="1"  Content="Inc/s^2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Grid.Row ="3" Value="{Binding Path=StageAcc, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource slAccConverter}}" IsMoveToPointEnabled="True" Margin="10,5"  VerticalAlignment="Center" TickPlacement="TopLeft" Minimum="0" Maximum="100" TickFrequency="10"  ValueChanged="SlAcc_ValueChanged"/>
+                        <TextBox Grid.Column="2" Grid.Row ="1" Name="tbAccLin" Text="{Binding Path=StageAcc, UpdateSourceTrigger=Explicit, Mode=OneWay,  Converter={StaticResource tbAccConverter}}" HorizontalAlignment="Center" TextAlignment="Right" Width="120"  VerticalContentAlignment="Center" Margin="5" Keyboard.PreviewKeyDown="Tb_PreviewKeyDown"/>
+                    </Grid>
+                    <!--Move Controls-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Power Control-->
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="btnPowerOn" Grid.Column="0" Content="Power ON" Margin="10,5" Click="BtnPowerOn_Click"/>
+                            <Button Name="btnPowerQuit" Grid.Column="1" Content="Power OFF" Margin="10,5" Click="BtnPowerQuit_Click"/>
+                            <Button Name="btnHome" Grid.Column="2" Content="Reference" Margin="10,5" Click="BtnHome_Click"/>
+                        </Grid>
+
+                        <!--Manual movement Control-->
+                        <Label Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="6" Content="Manual Position Control" Margin="10,5"  HorizontalAlignment="Center"/>
+                        <Label Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="2" Content="Left" Margin="0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Grid.Column="5"  Grid.Row="3" Grid.ColumnSpan="2" Content="Right" Margin="0"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <Slider x:Name="slPositionLin" IsEnabled="True" IsDirectionReversed="True" IsMoveToPointEnabled="True" Margin="5,0" Maximum="100" Minimum="0" Value="0" Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft" Thumb.DragCompleted="SlPositionLin_DragCompleted" Thumb.DragStarted="SlPositionLin_DragStarted" ValueChanged="SlPositionLin_ValueChanged"/>         
+
+                        <!--JOG Control-->
+                        <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Left" Margin="10,5" Click="BtnJogLeft_Click" />
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStopInfinite_Click"/>
+                        <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Right" Margin="10,5" Click="BtnJogRight_Click"/>
+
+                        <!--Position Control-->
+                        <Label Grid.Column="2"  Grid.Row="6" Grid.ColumnSpan="2" Content="Position Control" Margin="10,5" HorizontalAlignment="Center"/>
+                        <!--Go Position 1-->
+
+                        <!--Position 1-->
+                        <DockPanel Grid.Column="0" Grid.Row ="7" HorizontalAlignment="Left" Grid.ColumnSpan="6">
+                            <Button Name="btnGoPosition1" Content="Go Position 1" Margin="10,5" Click="BtnGoPosition1_Click" MinWidth="100"/>
+                            <TextBox Name="tbPos1" Text="{Binding Path=StagePosition1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc"/>
+                            <Button Name="btnReadPosition1"  Content="*" Width="20" Margin="5" Click="BtnReadPosition1_Click"/>
+                            <Label Content="Speed to P1"/>
+                            <TextBox Name="tbSpeedP2P1" Text="{Binding Path=StageSpeedP2P1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc/s"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed1_Click"/>
+                        </DockPanel>
+                        <!--Go Position 2-->
+
+                        <!--Position 2-->
+                        <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="8" HorizontalAlignment="Left" >
+                            <Button Name="btnGoPosition2" Grid.Column="0" Grid.Row="8" Content="Go Position 2" Margin="10,5" Click="BtnGoPosition2_Click" MinWidth="100"/>
+                            <TextBox Name="tbPos2" Text="{Binding Path=StagePosition2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc"/>
+                            <Button Name="btnReadPosition2" Content="*" Width="20" Margin="5" Click="BtnReadPosition2_Click"/>
+                            <Label Content="Speed to P2"/>
+                            <TextBox Name="tbSpeedP1P2" Text="{Binding Path=StageSpeedP1P2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc/s"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed2_Click"/>
+                        </DockPanel>
+                        <!--Stop button
+                                    <Button Name="btnStopTransition"  Grid.Column="2" Grid.Row="7" Grid.RowSpan="2" Content="Stop" Margin="10,5" Click="BtnStopTransition_Click"/>-->
+                        <!--Cycle-->
+                        <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
+                           <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->        
+                            <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5" VerticalAlignment="Center"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Checked="ClickCheckBox_Checked"/>
+
+                        </DockPanel>
+
+                        <Button Name="btnImport" Grid.Column="4"  Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>
+                        <Button Name="btnExport" Grid.Column="5" Grid.Row="9" Content="Export" Margin="5" Click="BtnExport_Click"/>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Rotation Movement" IsEnabled="False">
+                <StackPanel MaxWidth="1000">
+                    <!--Units-->
+                    <Grid IsEnabled="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Content="Inc" Margin="10,5"/>
+                        <Button Grid.Column="1" Content="Deg" Margin="10,5"/>
+                        <Button Grid.Column="2" Content="Rad" Margin="10,5"/>
+                        <Button Grid.Column="3" Content="mm" Margin="10,5"/>
+                        <TextBox Grid.Column="4" Margin="10,5" MinWidth="10"/>
+                        <Label Grid.Column="5" HorizontalContentAlignment="Left">
+                            <Hyperlink>
+                                <ContentControl Content="Diameter"/>
+                            </Hyperlink>
+                        </Label>
+                    </Grid>
+                    <!--Speed acceleration-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Speed-->
+                        <Label Grid.Column="0" Grid.Row ="0" Content="Speed" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Grid.Column="3" Grid.Row ="0" Content="Inc/s"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Grid.Row ="0" Value="{Binding Path=StageSpeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource slSpeedConverter}}" IsMoveToPointEnabled="True" Margin="10,5"  VerticalAlignment="Center" Ticks="" TickPlacement="TopLeft" Minimum="0" Maximum="100" TickFrequency="10"  ValueChanged="SlSpeed_ValueChanged" />
+                        <TextBox Grid.Column="2" Grid.Row ="0" Name="tbSpeedRot" Text="{Binding Path=StageSpeed, UpdateSourceTrigger=Explicit, Mode=TwoWay, Converter={StaticResource tbSpeedConverter}}" HorizontalAlignment="Stretch" TextAlignment="Right" Width="120"  VerticalContentAlignment="Center" Margin="5" Keyboard.PreviewKeyDown="Tb_PreviewKeyDown"/>
+
+                        <!--Acceleration-->
+                        <Label Grid.Column="0" Grid.Row ="1"  Content="Acceleration" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Grid.Column="3" Grid.Row ="1"  Content="Inc/s^2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Grid.Row ="3" Value="{Binding Path=StageAcc, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource slAccConverter}}" IsMoveToPointEnabled="True" Margin="10,5"  VerticalAlignment="Center" TickPlacement="TopLeft" Minimum="0" Maximum="100" TickFrequency="10"  ValueChanged="SlAcc_ValueChanged"/>
+                        <TextBox Grid.Column="2" Grid.Row ="1" Name="tbAccRot" Text="{Binding Path=StageAcc, UpdateSourceTrigger=Explicit, Mode=TwoWay,  Converter={StaticResource tbAccConverter}}" HorizontalAlignment="Center" TextAlignment="Right" Width="120"  VerticalContentAlignment="Center" Margin="5" Keyboard.PreviewKeyDown="Tb_PreviewKeyDown"/>
+                    </Grid>
+                    <!--Move Controls-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Power Control-->
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Power ON" Margin="10,5" Click="BtnPowerOn_Click"/>
+                            <Button Grid.Column="1" Content="Power OFF" Margin="10,5" Click="BtnPowerQuit_Click"/>
+                            <Button Grid.Column="2" Content="Reference" Margin="10,5" Click="BtnHome_Click"/>
+                        </Grid>
+
+                        <!--Manual Rotation Control-->
+                        <Label Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="6" Content="Manual Rotation Control" Margin="10,5"  HorizontalAlignment="Center"/>
+                        <Label Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="2" Content="Counter Clockwise" Margin="0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Grid.Column="5"  Grid.Row="3" Grid.ColumnSpan="2" Content="Clockwise" Margin="0"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <!--Slider-->
+                       <Slider x:Name="slManualRotation" Margin="10,5" IsMoveToPointEnabled="True" Cursor="Hand" Maximum="100" Minimum="-100" Value="0"  Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft"/>
+                        <!--Rotation Control-->
+                        <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="Continuous Rotation Controls" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        <!--Rotate Left-->
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Counter Clockwise" Margin="10,5" Click="BtnCounterClockwise_Click" />
+                        <!--Rotate Right-->
+                        <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Clockwise" Margin="10,5" Click="BtnClockwise_Click"/>
+                        <!--Stop button-->
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="Stop" Margin="10,5" Click="BtnStopInfinite_Click"/>
+
+                        <!--Position Control-->
+                        <Label Grid.Column="2"  Grid.Row="6" Grid.ColumnSpan="2" Content="Position Control" Margin="10,5" HorizontalAlignment="Center"/>
+                        <!--Go Position 1-->
+
+                        <!--Position 1-->
+                        <DockPanel Grid.Column="0" Grid.Row ="7" HorizontalAlignment="Left" Grid.ColumnSpan="6">
+                            <Button Content="Go Position 1" Margin="10,5" Click="BtnGoPosition1_Click" MinWidth="100"/>
+                            <TextBox Text="{Binding Path=StagePosition1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadPosition1_Click"/>
+                            <Label Content="Speed to P1"/>
+                            <TextBox Text="{Binding Path=StageSpeedP2P1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc/s"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed1_Click"/>
+                        </DockPanel>
+                        <!--Go Position 2-->
+
+                        <!--Position 2-->
+                        <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="8" HorizontalAlignment="Left" >
+                            <Button Grid.Column="0" Grid.Row="8" Content="Go Position 2" Margin="10,5" Click="BtnGoPosition2_Click" MinWidth="100"/>
+                            <TextBox Text="{Binding Path=StagePosition2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadPosition2_Click"/>
+                            <Label Content="Speed to P2"/>
+                            <TextBox Text="{Binding Path=StageSpeedP1P2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Label Content="Inc/s"/>
+                            <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed2_Click"/>
+                        </DockPanel>
+                        <!--Stop button
+                                    <Button Name="btnStopTransition"  Grid.Column="2" Grid.Row="7" Grid.RowSpan="2" Content="Stop" Margin="10,5" Click="BtnStopTransition_Click"/>-->
+                        <!--Cycle-->
+                        <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
+                            <Button Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5" VerticalAlignment="Center"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Checked="ClickCheckBox_Checked" Click="ClickCheckBox_Click"/>
+                        </DockPanel>
+
+                        <Button Grid.Column="4"  Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>
+                        <Button Grid.Column="5" Grid.Row="9" Content="Export" Margin="5" Click="BtnExport_Click"/>
+                    </Grid>
+                </StackPanel>
+
+            </TabItem>
+
+            <TabItem Header="Command logs">
+                <!--Command Control tab-->
+                <DockPanel Margin="10">
+                    <Label Content="Command History" DockPanel.Dock="Top" Style="{StaticResource HeaderStyle}"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtCommand" Grid.Column="0" Padding="2" Margin="0 10 5 10" Height="30" VerticalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Margin="5 10 0 10" Height="30" Content="Send" Click="Button_Click"/>
+                    </Grid>
+                    <Border BorderThickness="1" BorderBrush="Black">
+                        <RichTextBox x:Name="txtCommandHistory" FontFamily="Consolas" FontSize="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True" IsVisibleChanged="txtCommandHistory_IsVisibleChanged">
+
+                        </RichTextBox>
+                    </Border>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

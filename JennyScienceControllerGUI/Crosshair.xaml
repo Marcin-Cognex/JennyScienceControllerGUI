@@ -1,0 +1,22 @@
+﻿<Window x:Class="JennyScienceControllerGUI.Crosshair"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JennyScienceControllerGUI"
+        mc:Ignorable="d"
+        Title="Crosshair" Height="100" Width="100"
+        AllowsTransparency="True" WindowStyle="None"
+        MouseDown="Window_MouseDown" Topmost="True" ShowInTaskbar="False" KeyDown="Window_KeyDown">
+    <Window.Background>
+        <SolidColorBrush Opacity="0.5"/>
+    </Window.Background>
+    <Grid>
+        <Image>
+            <Image.Source>
+                <BitmapImage DecodePixelWidth="100" UriSource="/images/crosshairIcon2.png" />
+            </Image.Source>
+        </Image>
+
+    </Grid>
+</Window>
