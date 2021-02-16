@@ -41,7 +41,12 @@ namespace JennyScienceControllerGUI
 		{
 			InitializeComponent();
 
-			this.Title += string.Format(" v{0}.{1}.{2}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build);
+			//this.Title += string.Format(" v{0}.{1}.{2}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build);
+
+			if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+			{
+				this.Title += System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+			}
 
 			handle = this.DataContext as XenaxStageGUIControlVM;
 			DebounceTimer.Interval = TimeSpan.FromMilliseconds(50);

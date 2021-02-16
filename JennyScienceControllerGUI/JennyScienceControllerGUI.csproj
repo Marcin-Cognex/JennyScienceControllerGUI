@@ -25,9 +25,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>0.5.0.%2a</ApplicationVersion>
+    <ProductName>JennyScience Xenax Controller GUI</ProductName>
+    <PublisherName>Cognoids are awesome</PublisherName>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>0.5.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -62,9 +65,13 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>JennyScienceControllerGUI-logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -158,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\CrosshairIcon2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="JennyScienceControllerGUI-logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

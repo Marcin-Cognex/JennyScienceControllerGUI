@@ -7,7 +7,7 @@
         xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
         
         mc:Ignorable="d"
-        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen">
+        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico">
     <Window.DataContext>
         <local:XenaxStageGUIControlVM/>
     </Window.DataContext>
