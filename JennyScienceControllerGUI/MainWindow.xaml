@@ -258,8 +258,8 @@
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
                            <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->        
-                            <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5" VerticalAlignment="Center"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Checked="ClickCheckBox_Checked"/>
+                            <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
 
                         </DockPanel>
 
@@ -403,8 +403,8 @@
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
                             <Button Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5" VerticalAlignment="Center"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Checked="ClickCheckBox_Checked" Click="ClickCheckBox_Click"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5" VerticalAlignment="Center" Checked="cbCycle_Checked"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                         </DockPanel>
 
                         <Button Grid.Column="4"  Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>

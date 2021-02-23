@@ -137,23 +137,23 @@ namespace JennyScienceControllerGUI
 			MainWindow1.Width = Properties.Settings.Default.MainWindowWidth;
 			MainWindow1.Height = Properties.Settings.Default.MainWindowHeight;
 			btnTopMost.IsChecked = Properties.Settings.Default.MainWindowTopMost;
+
+			//rest of settings loaded on connection
+			
 		}
 
 		private void Xenax_PositionReached(object sender, EventArgs e)
 		{
 			Dispatcher.Invoke(() =>
 			{
-				//is this necesary? This is send often, even when Homing is pressed
-				//xenax1.MotorStopMotion();
-
 				xenax1.PositionVelocityUpdated += ReadPosition;
 				xenax1.MotorGetPosition();
 
 				if (handle.StageCycle)
 				{
-					if (handle.StageCycleStatus)
+					if (handle.StageCycleReturning)
 					{
-						handle.StageCycleStatus = false;
+						handle.StageCycleReturning = false;
 						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
 						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
 					}
@@ -161,7 +161,7 @@ namespace JennyScienceControllerGUI
 					{
 						if (handle.StageCycleClick)
 						{
-							//TODO perform click
+							//Perform click
 							int x = Convert.ToInt32(crosshairWindow.Left) + 50;
 							int y = Convert.ToInt32(crosshairWindow.Top) + 50;
 							crosshairWindow.Hide();
@@ -171,7 +171,7 @@ namespace JennyScienceControllerGUI
 							crosshairWindow.Show();
 						}
 
-						handle.StageCycleStatus = true;
+						handle.StageCycleReturning = true;
 						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
 					}
@@ -455,7 +455,6 @@ namespace JennyScienceControllerGUI
 		//Set position with slider - click
 		private void SlPositionLin_ValueChanged(object sender, RoutedEventArgs e)
 		{
-
 			if (!dragStarted)
 			{
 				if (!DebounceTimer.IsEnabled)
@@ -589,8 +588,6 @@ namespace JennyScienceControllerGUI
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			//BtnDisconnectConnection_Click(sender, new RoutedEventArgs());
-
 			crosshairWindow.Close();
 
 			//Save settings
@@ -607,10 +604,12 @@ namespace JennyScienceControllerGUI
 				Properties.Settings.Default.MainWindowHeight = MainWindow1.Height;
 			}
 			Properties.Settings.Default.MainWindowTopMost = MainWindow1.Topmost;
+
+			//disconnect and save settings there
+			BtnDisconnectConnection_Click(sender, new RoutedEventArgs());
+
 			Properties.Settings.Default.Save();
 		}
-
-
 
 		private void BtnPowerOn_Click(object sender, RoutedEventArgs e)
 		{
@@ -690,14 +689,14 @@ namespace JennyScienceControllerGUI
 
 		private void BtnGoPosition1_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycleStatus = false;
+			handle.StageCycleReturning = false;
 			xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
 		}
 
 		private void BtnGoPosition2_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycleStatus = false;
+			handle.StageCycleReturning = false;
 			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
 		}
@@ -798,11 +797,6 @@ namespace JennyScienceControllerGUI
 			else { MainWindow1.Topmost = true; }
 		}
 
-		private void ClickCheckBox_Checked(object sender, RoutedEventArgs e)
-		{
-
-		}
-
 		private void ClickCheckBox_Click(object sender, RoutedEventArgs e)
 		{
 			if (((CheckBox)sender).IsChecked == true)
@@ -814,12 +808,17 @@ namespace JennyScienceControllerGUI
 				crosshairWindow.Hide();
 			}
 		}
-	}
-	
+
+        private void cbCycle_Checked(object sender, RoutedEventArgs e)
+        {
+			BtnGoPosition1_Click(sender, e);
+		}
+    }
 
 
-		#region ValueConverters
-		public class IsConnectedConverter : IValueConverter
+
+    #region ValueConverters
+    public class IsConnectedConverter : IValueConverter
 		{
 			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 			{

@@ -242,19 +242,19 @@ namespace JennyScienceControllerGUI
 		}
 		
 		//TODO: find a better name for this.
-		private bool _StageCycleStatus;
-		public bool StageCycleStatus
+		private bool _StageCycleReturning;
+		public bool StageCycleReturning
 		{
 			get
 			{
-				return this._StageCycleStatus;
+				return this._StageCycleReturning;
 			}
 
 			set
 			{
-				if (value != this._StageCycleStatus)
+				if (value != this._StageCycleReturning)
 				{
-					this._StageCycleStatus = value;
+					this._StageCycleReturning = value;
 
 					this.OnPropertyChanged("StageCycleStatus");
 				}
@@ -321,7 +321,7 @@ namespace JennyScienceControllerGUI
 			StagePositionCurrent = 0;
 			StageContinuousRotation = false;
 			StageCycle = false;
-			StageCycleStatus = false;
+			StageCycleReturning = false;
 		}
 
 		//Copy constructor
@@ -333,7 +333,7 @@ namespace JennyScienceControllerGUI
 			StagePosition2 = xenaxStageGUI.StagePosition2;
 			StagePositionCurrent = xenaxStageGUI.StagePositionCurrent;
 			StageContinuousRotation = false;
-			StageCycleStatus = false;
+			StageCycleReturning = false;
 			StageCycle = false;
 		}
 
