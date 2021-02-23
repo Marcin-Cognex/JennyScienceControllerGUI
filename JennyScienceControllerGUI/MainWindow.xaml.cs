@@ -278,9 +278,7 @@ namespace JennyScienceControllerGUI
 				}
 			}
 			);
-
 		}
-
 		private void Xenax1_MotorStatusUpdate(object sender, EventArgs e)
 		{
 			switch (xenax1.MotorStatus)
