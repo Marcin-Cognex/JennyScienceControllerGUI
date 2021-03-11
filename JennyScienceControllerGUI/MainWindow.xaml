@@ -220,7 +220,7 @@
                         <Slider x:Name="slPositionLin" IsEnabled="True" IsDirectionReversed="True" IsMoveToPointEnabled="True" Margin="5,0" Maximum="100" Minimum="0" Value="0" Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft" Thumb.DragCompleted="SlPositionLin_DragCompleted" Thumb.DragStarted="SlPositionLin_DragStarted" ValueChanged="SlPositionLin_ValueChanged"/>         
 
                         <!--JOG Control-->
-                        <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls (momentary buttons)" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
                         <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Left" Margin="10,5" Click="BtnJogLeft_Click" />
                         <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStopInfinite_Click"/>
                         <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Right" Margin="10,5" Click="BtnJogRight_Click"/>
