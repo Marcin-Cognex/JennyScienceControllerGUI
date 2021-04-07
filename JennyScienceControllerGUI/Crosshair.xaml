@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JennyScienceControllerGUI"
         mc:Ignorable="d"
-        Title="Crosshair" Height="100" Width="100"
+        Title="Crosshair" Height="50" Width="50"
         AllowsTransparency="True" WindowStyle="None"
         MouseDown="Window_MouseDown" Topmost="True" ShowInTaskbar="False" KeyDown="Window_KeyDown">
     <Window.Background>
@@ -14,7 +14,7 @@
     <Grid>
         <Image>
             <Image.Source>
-                <BitmapImage DecodePixelWidth="100" UriSource="/images/crosshairIcon2.png" />
+                <BitmapImage DecodePixelWidth="50" UriSource="/images/crosshairIcon2.png" />
             </Image.Source>
         </Image>
 
