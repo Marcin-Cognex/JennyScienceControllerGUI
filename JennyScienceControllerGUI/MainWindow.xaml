@@ -31,8 +31,8 @@
         </Style>
     </Window.Resources>
 
-    
-    
+
+
     <!--Default grid definition-->
     <Grid Margin="0,0">
         <Grid.ColumnDefinitions>
@@ -56,9 +56,16 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <ToggleButton x:Name="btnTopMost" Grid.Column="0" Content="Always on Top" Margin="5" Click="ToggleButton_Click"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Label Content="Always on top"/>
+                <local:SimpleToggleButton x:Name="btnTopMost" Grid.Column="2" Height="25" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
+                <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
+            </StackPanel>
             <StatusBarItem Grid.Column="1" Name="StageConnectionStatus1" Content="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>
-            <StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
+            
+
+            <!--<StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>-->
+            
         </StatusBar>
 
 
@@ -216,7 +223,7 @@
                         <Label Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="6" Content="Manual Position Control" Margin="10,5"  HorizontalAlignment="Center"/>
                         <Label Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="2" Content="Left" Margin="0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Grid.Column="5"  Grid.Row="3" Grid.ColumnSpan="2" Content="Right" Margin="0"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <Slider x:Name="slPositionLin" IsEnabled="True" IsDirectionReversed="True" IsMoveToPointEnabled="True" Margin="5,0" Maximum="100" Minimum="0" Value="0" Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft" Thumb.DragCompleted="SlPositionLin_DragCompleted" Thumb.DragStarted="SlPositionLin_DragStarted" ValueChanged="SlPositionLin_ValueChanged"/>         
+                        <Slider x:Name="slPositionLin" IsEnabled="True" IsDirectionReversed="True" IsMoveToPointEnabled="True" Margin="5,0" Maximum="100" Minimum="0" Value="0" Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft" Thumb.DragCompleted="SlPositionLin_DragCompleted" Thumb.DragStarted="SlPositionLin_DragStarted" ValueChanged="SlPositionLin_ValueChanged"/>
 
                         <!--JOG Control-->
                         <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls (momentary buttons)" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
@@ -256,7 +263,7 @@
                                     <Button Name="btnStopTransition"  Grid.Column="2" Grid.Row="7" Grid.RowSpan="2" Content="Stop" Margin="10,5" Click="BtnStopTransition_Click"/>-->
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
-                           <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->        
+                            <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->
                             <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
 
@@ -359,7 +366,7 @@
                         <Label Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="2" Content="Counter Clockwise" Margin="0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Grid.Column="5"  Grid.Row="3" Grid.ColumnSpan="2" Content="Clockwise" Margin="0"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
                         <!--Slider-->
-                       <Slider x:Name="slManualRotation" Margin="10,5" IsMoveToPointEnabled="True" Cursor="Hand" Maximum="100" Minimum="-100" Value="0"  Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft"/>
+                        <Slider x:Name="slManualRotation" Margin="10,5" IsMoveToPointEnabled="True" Cursor="Hand" Maximum="100" Minimum="-100" Value="0"  Grid.Column="0" Grid.Row ="2" Grid.ColumnSpan="6" VerticalAlignment="Top" TickFrequency="10" TickPlacement="TopLeft"/>
                         <!--Rotation Control-->
                         <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="Continuous Rotation Controls" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
                         <!--Rotate Left-->
@@ -432,6 +439,7 @@
                     </Border>
                 </DockPanel>
             </TabItem>
+            
         </TabControl>
     </Grid>
 </Window>

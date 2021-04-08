@@ -136,7 +136,7 @@ namespace JennyScienceControllerGUI
 			}
 			MainWindow1.Width = Properties.Settings.Default.MainWindowWidth;
 			MainWindow1.Height = Properties.Settings.Default.MainWindowHeight;
-			btnTopMost.IsChecked = Properties.Settings.Default.MainWindowTopMost;
+			btnTopMost.Toggled = Properties.Settings.Default.MainWindowTopMost;
 
 			//rest of settings loaded on connection
 			
@@ -789,11 +789,11 @@ namespace JennyScienceControllerGUI
 			xenax1.Send(txtCommand.Text.Trim() + "\r");
 		}
 
-		private void ToggleButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (((System.Windows.Controls.Primitives.ToggleButton)sender).IsChecked == false) { MainWindow1.Topmost = false; }
-			else { MainWindow1.Topmost = true; }
-		}
+		//private void ToggleButton_Click(object sender, RoutedEventArgs e)
+		//{
+		//	if (((System.Windows.Controls.Primitives.ToggleButton)sender).IsChecked == false) { MainWindow1.Topmost = false; }
+		//	else { MainWindow1.Topmost = true; }
+		//}
 
 		private void ClickCheckBox_Click(object sender, RoutedEventArgs e)
 		{
@@ -810,6 +810,12 @@ namespace JennyScienceControllerGUI
         private void cbCycle_Checked(object sender, RoutedEventArgs e)
         {
 			BtnGoPosition1_Click(sender, e);
+		}
+
+        private void btnTopMost_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+			if(btnTopMost.Toggled == false) { MainWindow1.Topmost = false; }
+			else { MainWindow1.Topmost = true; }
 		}
     }
 

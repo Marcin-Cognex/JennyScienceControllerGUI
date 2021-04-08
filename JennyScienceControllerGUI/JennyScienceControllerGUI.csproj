@@ -107,6 +107,9 @@
       <DependentUpon>StageConnection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="SimpleToggleButton.xaml.cs">
+      <DependentUpon>SimpleToggleButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Xenax.cs" />
     <Compile Include="XenaxStageGUIControlVM.cs" />
     <Page Include="Crosshair.xaml">
@@ -126,6 +129,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\StageConnection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SimpleToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
