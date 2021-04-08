@@ -62,12 +62,8 @@
                 <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
             </StackPanel>
             <StatusBarItem Grid.Column="1" Name="StageConnectionStatus1" Content="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>
-            
-
-            <!--<StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>-->
-            
+            <StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
         </StatusBar>
-
 
         <!-- Default Tab Control-->
         <TabControl x:Name="TabControlAll" Margin="0" Grid.Row="0" TabStripPlacement="Left" Grid.ColumnSpan="2">
