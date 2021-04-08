@@ -11,7 +11,7 @@
         <Grid HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center">
             <Rectangle x:Name="buttonBackgroudBorder" Fill="Gray" HorizontalAlignment="Center" Height="56" VerticalAlignment="Center" Width="96" Margin="0" RadiusY="28" RadiusX="28" MouseLeftButtonDown="Dot_MouseLeftButtonDown"/>
             <Rectangle x:Name="buttonBackgroud" Fill="#FFA0A0A0" HorizontalAlignment="Center" Height="54" VerticalAlignment="Center" Width="94" Margin="0" RadiusY="28" RadiusX="28" MouseLeftButtonDown="Dot_MouseLeftButtonDown"/>
-            <Label x:Name="backgroundLabel" Content="OFF" Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" FontFamily="Calibri" Foreground="#FF0D0D0D"/>
+            <Label x:Name="backgroundLabel" Content="OFF" Margin="2,2,-1,2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="Franklin Gothic Heavy" Foreground="White"/>
             <Ellipse x:Name="buttonDotBorder" Fill="Gray" HorizontalAlignment="Center" Height="50" Width="50" VerticalAlignment="Center" MouseLeftButtonDown="Dot_MouseLeftButtonDown"/>
             <Ellipse x:Name="buttonDot" HorizontalAlignment="Center" Height="48" Width="48" VerticalAlignment="Center" MouseLeftButtonDown="Dot_MouseLeftButtonDown">
                 <Ellipse.Fill>
