@@ -45,7 +45,9 @@ namespace JennyScienceControllerGUI
 
 			if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
 			{
-				this.Title += "ver " + System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+				this.Title += "ver " +
+					System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.Major.ToString() + "." +
+					System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.Revision.ToString();
 			}
 
 			handle = this.DataContext as XenaxStageGUIControlVM;
