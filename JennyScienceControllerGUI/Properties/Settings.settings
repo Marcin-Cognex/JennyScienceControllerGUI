@@ -41,5 +41,11 @@
     <Setting Name="RotationStageSpeedP1P2" Type="System.UInt64" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="crosshairWindowLeft" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="crosshairWindowTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

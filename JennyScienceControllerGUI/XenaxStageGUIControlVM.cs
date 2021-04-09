@@ -280,6 +280,9 @@ namespace JennyScienceControllerGUI
 			}
 		}
 
+		private bool _StageCycleRunOnce = false;
+		public bool StageCycleRunOnce { get => _StageCycleRunOnce; set => _StageCycleRunOnce = value; }
+
 		private bool _StageCycleClick;
 		public bool StageCycleClick
 		{

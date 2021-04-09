@@ -168,5 +168,29 @@ namespace JennyScienceControllerGUI.Properties {
                 this["RotationStageSpeedP1P2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double crosshairWindowLeft {
+            get {
+                return ((double)(this["crosshairWindowLeft"]));
+            }
+            set {
+                this["crosshairWindowLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double crosshairWindowTop {
+            get {
+                return ((double)(this["crosshairWindowTop"]));
+            }
+            set {
+                this["crosshairWindowTop"] = value;
+            }
+        }
     }
 }

@@ -194,6 +194,8 @@ namespace XenaxModel
 		// The response from the Xenax device.  
 		private static String response = String.Empty;
 
+		private long targetPosition = 0;
+
 		public Xenax()
 		{
 			SetPingTimer();
@@ -646,8 +648,9 @@ namespace XenaxModel
             if (v.Success)
             {
 				_motorStatus = MotorStatusEn.PowerON;
-				OnPositionReached(EventArgs.Empty);
 				OnMotorStatusUpdate(EventArgs.Empty);
+
+				OnPositionReached(EventArgs.Empty);
 			}
 
 			regex = new Regex("@S0\r\n>");
@@ -735,7 +738,7 @@ namespace XenaxModel
         //-----------------------------------------------------------------------------------------------------------------------------
         public void MotorGoToPositionAbsolute(long position)
         {
-            Send("G" + position + "\r");
+			Send("G" + position + "\r");
         }
 		//-----------------------------------------------------------------------------------------------------------------------------
 		public void MotorGoInfiniteCounterClockwise()

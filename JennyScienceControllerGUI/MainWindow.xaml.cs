@@ -21,7 +21,7 @@ using Microsoft.Win32;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Threading;
-
+using System.Diagnostics;
 
 namespace JennyScienceControllerGUI
 {
@@ -36,6 +36,7 @@ namespace JennyScienceControllerGUI
 		XenaxStageGUIControlVM handle;
 		DispatcherTimer DebounceTimer = new DispatcherTimer();
 		Crosshair crosshairWindow = new Crosshair();
+		DispatcherTimer currentPositionTimer = new System.Windows.Threading.DispatcherTimer();
 
 		public MainWindow()
 		{
@@ -94,7 +95,6 @@ namespace JennyScienceControllerGUI
 				wantedChild.AddHandler(PreviewMouseDownEvent,
 						new RoutedEventHandler(SlPositionLin_MouseDown),
 						true);
-
 			}
 
 			xenax1.ConnectionUpdate += Xenax_ConnectionUpdate;
@@ -104,11 +104,49 @@ namespace JennyScienceControllerGUI
 
 			xenax1.DataReceived += Xenax1_DataReceived;
 			xenax1.DataSent += Xenax1_DataSent;
+
+            currentPositionTimer.Tick += CurrentPositionTimer_Tick;
+			currentPositionTimer.Interval = TimeSpan.FromMilliseconds(250);
 		}
 
-		//This is a replacement for Cursor.Position in WinForms
-		[System.Runtime.InteropServices.DllImport("user32.dll")]
+        private void CurrentPositionTimer_Tick(object sender, EventArgs e)
+        {
+			xenax1.MotorGetPosition();
+        }
+        #region Mouse move/click DLL imports
+        //This is a replacement for Cursor.Position in WinForms
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
 		static extern bool SetCursorPos(int x, int y);
+
+		/// <summary>
+		/// Struct representing a point.
+		/// </summary>
+		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+		public struct POINT
+		{
+			public int X;
+			public int Y;
+
+			public static implicit operator Point(POINT point)
+			{
+				return new Point(point.X, point.Y);
+			}
+		}
+
+		/// <summary>
+		/// Retrieves the cursor's position, in screen coordinates.
+		/// </summary>
+		/// <see>See MSDN documentation for further information.</see>
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		public static extern bool GetCursorPos(out POINT lpPoint);
+
+		public static void GetCursorPosition(out int xpos, out int ypos)
+		{
+			POINT lpPoint;
+			GetCursorPos(out lpPoint);
+			xpos = lpPoint.X;
+			ypos = lpPoint.Y;
+		}
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
@@ -123,8 +161,9 @@ namespace JennyScienceControllerGUI
 			mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
 			mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
 		}
+        #endregion
 
-		private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
 		{
 			//Load connections
 			Properties.Settings.Default.Reload();
@@ -139,48 +178,92 @@ namespace JennyScienceControllerGUI
 			MainWindow1.Width = Properties.Settings.Default.MainWindowWidth;
 			MainWindow1.Height = Properties.Settings.Default.MainWindowHeight;
 			btnTopMost.Toggled = Properties.Settings.Default.MainWindowTopMost;
-
+			crosshairWindow.Left = Properties.Settings.Default.crosshairWindowLeft;
+			crosshairWindow.Top = Properties.Settings.Default.crosshairWindowTop;
 			//rest of settings loaded on connection
-			
 		}
 
 		private void Xenax_PositionReached(object sender, EventArgs e)
 		{
+			//this gets fired multiple times
+			//when motor is turned ON
+			//when position is reached
+
 			Dispatcher.Invoke(() =>
 			{
 				xenax1.PositionVelocityUpdated += ReadPosition;
 				xenax1.MotorGetPosition();
 
-				if (handle.StageCycle)
-				{
-					if (handle.StageCycleReturning)
-					{
-						handle.StageCycleReturning = false;
-						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
-					}
-					else
-					{
-						if (handle.StageCycleClick)
-						{
-							//Perform click
-							int x = Convert.ToInt32(crosshairWindow.Left) + 50;
-							int y = Convert.ToInt32(crosshairWindow.Top) + 50;
-							crosshairWindow.Hide();
-							System.Threading.Thread.Sleep(100);
-							LeftMouseClick(x, y);
-							System.Threading.Thread.Sleep(100);
-							crosshairWindow.Show();
-						}
+				Trace.WriteLine("Xenax_PositionReached------------- pos=" + handle.StagePositionCurrent);
 
+				if (handle.StageCycleRunOnce)
+				{
+					Trace.WriteLine("handle.StageCycleRunOnce");
+
+					if (handle.StageCycleReturning == false)
+					{
+						if (handle.StageCycleClick) { performClick(); }
+
+						// Going from P1 to P2
+						Trace.WriteLine("Going from P1 to P2");
 						handle.StageCycleReturning = true;
 						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
 					}
+					else
+					{
+						//returning from P2 to P1
+						Trace.WriteLine("returning from P2 to P1");
+						handle.StageCycleReturning = false;
+						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+
+						handle.StageCycleRunOnce = false;
+					}
+				}
+				else if (handle.StageCycle)
+				{
+					Trace.WriteLine("handle.StageCycle");
+					
+					if (handle.StageCycleReturning == false)
+					{
+						if (handle.StageCycleClick) { performClick(); }
+
+						// Going from P1 to P2
+						Trace.WriteLine("Going from P1 to P2");
+						handle.StageCycleReturning = true;
+						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+					}
+					else
+					{
+						//returning from P2 to P1
+						Trace.WriteLine("returning from P2 to P1");
+						handle.StageCycleReturning = false;
+						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+					}
 				}
 			}
 			);
+		}
 
+		private void performClick()
+        {
+			//save current mouse position
+			int init_x, init_y;
+			GetCursorPosition(out init_x, out init_y);
+
+			//target location
+			int x = Convert.ToInt32(crosshairWindow.Left + crosshairWindow.Width / 2);
+			int y = Convert.ToInt32(crosshairWindow.Top + crosshairWindow.Height / 2);
+			crosshairWindow.Hide();
+			System.Threading.Thread.Sleep(100);
+			LeftMouseClick(x, y);
+			System.Threading.Thread.Sleep(100);
+			crosshairWindow.Show();
+
+			SetCursorPos(init_x, init_y);
 		}
 
 		private void Xenax_PositionSpeedAccUpdated(object sender, EventArgs e)
@@ -194,6 +277,13 @@ namespace JennyScienceControllerGUI
 			);
 		}
 
+		private void Xenax_StopMotion()
+        {
+			handle.StageCycleRunOnce = false;
+			handle.StageCycle = false;
+			xenax1.MotorStopMotion();
+		}
+
 		#region ConnectionHistoryTabEvents
 		private void BtnConnectConnection_Click(object sender, RoutedEventArgs e)
 		{
@@ -205,7 +295,6 @@ namespace JennyScienceControllerGUI
 			{
 				xenax1.StopClient();
 				xenax1.StartClient(conn);
-				//handle.CurrentStageType = (int)conn.stageType; //should not be done here
 			}
 		}
 
@@ -269,6 +358,8 @@ namespace JennyScienceControllerGUI
 						handle.StageSpeedP1P2 = Properties.Settings.Default.RotationStageSpeedP1P2;
 					}
 
+					currentPositionTimer.Start();
+
 					this.TabControlAll.SelectedItem = isLinear ? tiLinearMovement : tiRotationMovement;
 				}
 				else
@@ -292,14 +383,13 @@ namespace JennyScienceControllerGUI
 					handle.StageMotorStatus = "Power ON";
 					break;
 				case MotorStatusEn.InMotion:
-					handle.StageMotorStatus = "Moving...";
+                    handle.StageMotorStatus = "Moving...";
 					break;
 				case MotorStatusEn.Error:
 					handle.StageMotorStatus = "Error";
 					break;
 			}
 		}
-
 
 		private void Add_Click(object sender, RoutedEventArgs e)
 		{
@@ -474,7 +564,8 @@ namespace JennyScienceControllerGUI
 
 		private void SlPositionLin_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
 		{
-			xenax1.MotorStopMotion();
+			Xenax_StopMotion();
+
 			dragStarted = false;
 			if (!DebounceTimer.IsEnabled)
 			{
@@ -492,19 +583,18 @@ namespace JennyScienceControllerGUI
 
 		private void SlPositionLin_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
 		{
+			Xenax_StopMotion();
 			dragStarted = true;
-			xenax1.MotorStopMotion();
 		}
 
 		public void SlPositionLin_MouseDown(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycle = false;
-			xenax1.MotorStopMotion();
+			Xenax_StopMotion();
 		}
 
 		private void BtnLinStop_Click(object sender, RoutedEventArgs e)
 		{
-			xenax1.MotorStopMotion();
+			Xenax_StopMotion();
 		}
 
 		private void ReadPosition(object sender, EventArgs e)
@@ -554,7 +644,7 @@ namespace JennyScienceControllerGUI
 
 		private void SlManualRotation_MouseUp(object sender, RoutedEventArgs e)
 		{
-			MouseButtonEventArgs args = e as MouseButtonEventArgs;
+			//MouseButtonEventArgs args = e as MouseButtonEventArgs;
 			xenax1.MotorStopMotion();
 			((Slider)sender).Value = 0;
 		}
@@ -566,7 +656,7 @@ namespace JennyScienceControllerGUI
 
 		private void SlManualRotation_MouseLeave(object sender, RoutedEventArgs e)
 		{
-			MouseButtonEventArgs args = e as MouseButtonEventArgs;
+			//MouseButtonEventArgs args = e as MouseButtonEventArgs;
 			if (this.dragStarted)
 			{
 				xenax1.MotorStopMotion();
@@ -604,11 +694,13 @@ namespace JennyScienceControllerGUI
 				Properties.Settings.Default.MainWindowHeight = MainWindow1.Height;
 			}
 			Properties.Settings.Default.MainWindowTopMost = MainWindow1.Topmost;
+			Properties.Settings.Default.crosshairWindowLeft = crosshairWindow.Left;
+			Properties.Settings.Default.crosshairWindowTop = crosshairWindow.Top;
 
 			//disconnect and save settings there
 			BtnDisconnectConnection_Click(sender, new RoutedEventArgs());
 
-			Properties.Settings.Default.Save();
+			Properties.Settings.Default.Save(); 
 		}
 
 		private void BtnPowerOn_Click(object sender, RoutedEventArgs e)
@@ -648,8 +740,8 @@ namespace JennyScienceControllerGUI
 
 		private void BtnStopInfinite_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycle = false;
-			xenax1.MotorStopMotion();
+			Xenax_StopMotion();
+
 			xenax1.PositionVelocityUpdated += ReadPosition;
 			xenax1.MotorGetPosition();
 		}
@@ -703,9 +795,7 @@ namespace JennyScienceControllerGUI
 
 		private void BtnStopTransition_Click(object sender, RoutedEventArgs e)
 		{
-
-			xenax1.MotorStopMotion();
-			handle.StageCycle = false;
+			Xenax_StopMotion();
 		}
 
 		private void BtnJogLeft_Click(object sender, RoutedEventArgs e)
@@ -786,7 +876,7 @@ namespace JennyScienceControllerGUI
 
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private void SendButton_Click(object sender, RoutedEventArgs e)
 		{
 			xenax1.Send(txtCommand.Text.Trim() + "\r");
 		}
@@ -819,6 +909,27 @@ namespace JennyScienceControllerGUI
 			if(btnTopMost.Toggled == false) { MainWindow1.Topmost = false; }
 			else { MainWindow1.Topmost = true; }
 		}
+
+        private void btnCycleRunOnce_Click(object sender, RoutedEventArgs e)
+        {
+			handle.StageCycleRunOnce = true;
+			BtnGoPosition1_Click(sender, e);
+		}
+
+        private void MainWindow1_StateChanged(object sender, EventArgs e)
+        {
+			if (handle.StageCycleClick)
+			{
+				if (MainWindow1.WindowState == WindowState.Minimized)
+                {
+					crosshairWindow.Hide();
+                }
+				else
+				{
+					crosshairWindow.Show();
+				}
+			}
+        }
     }
 
 

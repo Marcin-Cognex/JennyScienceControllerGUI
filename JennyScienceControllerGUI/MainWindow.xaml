@@ -7,7 +7,7 @@
         xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
         
         mc:Ignorable="d"
-        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico">
+        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
     <Window.DataContext>
         <local:XenaxStageGUIControlVM/>
     </Window.DataContext>
@@ -49,20 +49,29 @@
                 <ItemsPanelTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="5*"/>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Label Content="Always on top"/>
-                <local:SimpleToggleButton x:Name="btnTopMost" Grid.Column="2" Height="25" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
-                <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
-            </StackPanel>
+            <StatusBarItem Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Always on top"/>
+                    <local:SimpleToggleButton x:Name="btnTopMost" Height="25" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
+                    <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
+                </StackPanel>
+            </StatusBarItem>
             <StatusBarItem Grid.Column="1" Name="StageConnectionStatus1" Content="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>
             <StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
+            <StatusBarItem Grid.Column="3">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Current position"/>
+                    <Label Grid.Column="3" Content="{Binding Path=StagePositionCurrent, Mode=OneWay}"/>
+                </StackPanel>
+            </StatusBarItem>
         </StatusBar>
 
         <!-- Default Tab Control-->
@@ -260,8 +269,9 @@
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
                             <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->
-                            <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
+                            <Button Content="Cycle run once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleRunOnce_Click"/>
+                            <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
 
                         </DockPanel>
 
@@ -404,9 +414,10 @@
                                     <Button Name="btnStopTransition"  Grid.Column="2" Grid.Row="7" Grid.RowSpan="2" Content="Stop" Margin="10,5" Click="BtnStopTransition_Click"/>-->
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
-                            <Button Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5" VerticalAlignment="Center" Checked="cbCycle_Checked"/>
-                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
+                            <Button Content="Clear Position" Margin="10,5,0,5" Click="BtnClearPosition_Click" MinWidth="100"/>
+                            <Button Content="Cycle run once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleRunOnce_Click"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" Checked="cbCycle_Checked"/>
+                            <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                         </DockPanel>
 
                         <Button Grid.Column="4"  Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>
@@ -426,7 +437,7 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="txtCommand" Grid.Column="0" Padding="2" Margin="0 10 5 10" Height="30" VerticalContentAlignment="Center"/>
-                        <Button Grid.Column="1" Margin="5 10 0 10" Height="30" Content="Send" Click="Button_Click"/>
+                        <Button Grid.Column="1" Margin="5 10 0 10" Height="30" Content="Send" Click="SendButton_Click"/>
                     </Grid>
                     <Border BorderThickness="1" BorderBrush="Black">
                         <RichTextBox x:Name="txtCommandHistory" FontFamily="Consolas" FontSize="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True" IsVisibleChanged="txtCommandHistory_IsVisibleChanged">
