@@ -113,6 +113,7 @@ namespace JennyScienceControllerGUI
         {
 			xenax1.MotorGetPosition();
         }
+
         #region Mouse move/click DLL imports
         //This is a replacement for Cursor.Position in WinForms
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -161,10 +162,49 @@ namespace JennyScienceControllerGUI
 			mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
 			mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
 		}
-        #endregion
 
-        private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
+		[System.Runtime.InteropServices.DllImport("User32.dll")]
+		static extern IntPtr GetDC(IntPtr hwnd);
+
+		[System.Runtime.InteropServices.DllImport("gdi32.dll")]
+		static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+		double screenUnitSize = 1;
+		private void getSystemScreenUnitSize()
 		{
+			// get the system DPI
+			IntPtr dDC = GetDC(IntPtr.Zero); // Get desktop DC
+			int screenDPI = GetDeviceCaps(dDC, 88);
+			bool rv = ReleaseDC(IntPtr.Zero, dDC);
+
+			// WPF's physical unit size is calculated by taking the 
+			// "Device-Independant Unit Size" (always 1/96)
+			// and scaling it by the system DPI
+			screenUnitSize  = (1d / 96d) * (double)screenDPI;
+		}
+
+		private Point convertPixelsToUnits(int x, int y)
+		{
+			Point wpfUnits = new Point((double)x / screenUnitSize, (double)y / screenUnitSize);
+			return wpfUnits;
+		}
+
+		private Point convertUnitsToPixels(double x, double y)
+		{
+			Point pixels = new Point(x * screenUnitSize, y * screenUnitSize);
+			return pixels;
+		}
+		#endregion
+
+		private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
+		{
+			getSystemScreenUnitSize();
+
+			
+
 			//Load connections
 			Properties.Settings.Default.Reload();
 			if (Properties.Settings.Default.Connections != null)
@@ -255,14 +295,14 @@ namespace JennyScienceControllerGUI
 			GetCursorPosition(out init_x, out init_y);
 
 			//target location
-			int x = Convert.ToInt32(crosshairWindow.Left + crosshairWindow.Width / 2);
-			int y = Convert.ToInt32(crosshairWindow.Top + crosshairWindow.Height / 2);
+			Point p = convertUnitsToPixels(crosshairWindow.Left + crosshairWindow.Width / 2.0, crosshairWindow.Top + crosshairWindow.Height / 2.0);
+
 			crosshairWindow.Hide();
 			System.Threading.Thread.Sleep(100);
-			LeftMouseClick(x, y);
+			LeftMouseClick(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
 			System.Threading.Thread.Sleep(100);
 			crosshairWindow.Show();
-
+			
 			SetCursorPos(init_x, init_y);
 		}
 
@@ -694,8 +734,10 @@ namespace JennyScienceControllerGUI
 				Properties.Settings.Default.MainWindowHeight = MainWindow1.Height;
 			}
 			Properties.Settings.Default.MainWindowTopMost = MainWindow1.Topmost;
-			Properties.Settings.Default.crosshairWindowLeft = crosshairWindow.Left;
-			Properties.Settings.Default.crosshairWindowTop = crosshairWindow.Top;
+
+			//save only within primary screen to avoid multi-screen issues
+			Properties.Settings.Default.crosshairWindowLeft = (crosshairWindow.Left > SystemParameters.PrimaryScreenWidth) ? SystemParameters.PrimaryScreenWidth : crosshairWindow.Left;
+			Properties.Settings.Default.crosshairWindowTop = (crosshairWindow.Top > SystemParameters.PrimaryScreenHeight) ? SystemParameters.PrimaryScreenHeight : crosshairWindow.Top;
 
 			//disconnect and save settings there
 			BtnDisconnectConnection_Click(sender, new RoutedEventArgs());
