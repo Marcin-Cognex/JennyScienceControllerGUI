@@ -223,89 +223,6 @@ namespace JennyScienceControllerGUI
 			//rest of settings loaded on connection
 		}
 
-		private void Xenax_PositionReached(object sender, EventArgs e)
-		{
-			//this gets fired multiple times
-			//when motor is turned ON
-			//when position is reached
-
-			Dispatcher.Invoke(() =>
-			{
-				xenax1.PositionVelocityUpdated += ReadPosition;
-				xenax1.MotorGetPosition();
-
-				Trace.WriteLine("Xenax_PositionReached------------- pos=" + handle.StagePositionCurrent);
-
-				if (handle.StageCycleRunOnce)
-				{
-					Trace.WriteLine("handle.StageCycleRunOnce");
-
-					if (handle.StageCycleReturning == false)
-					{
-						if (handle.StageCycleClick) { performClick(); }
-
-						// Going from P1 to P2
-						Trace.WriteLine("Going from P1 to P2");
-						handle.StageCycleReturning = true;
-						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
-					}
-					else
-					{
-						//returning from P2 to P1
-						Trace.WriteLine("returning from P2 to P1");
-						handle.StageCycleReturning = false;
-						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
-
-						handle.StageCycleRunOnce = false;
-					}
-				}
-				else if (handle.StageCycle)
-				{
-					Trace.WriteLine("handle.StageCycle");
-					
-					if (handle.StageCycleReturning == false)
-					{
-						if (handle.StageCycleClick) { performClick(); }
-
-						// Going from P1 to P2
-						Trace.WriteLine("Going from P1 to P2");
-						handle.StageCycleReturning = true;
-						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
-					}
-					else
-					{
-						//returning from P2 to P1
-						Trace.WriteLine("returning from P2 to P1");
-						handle.StageCycleReturning = false;
-						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
-					}
-				}
-			}
-			);
-		}
-
-		private void performClick()
-        {
-			//save current mouse position
-			int init_x, init_y;
-			GetCursorPosition(out init_x, out init_y);
-
-			//target location
-			Point p = convertUnitsToPixels(crosshairWindow.Left + crosshairWindow.Width / 2.0, crosshairWindow.Top + crosshairWindow.Height / 2.0);
-
-			crosshairWindow.Hide();
-			System.Threading.Thread.Sleep(100);
-			LeftMouseClick(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
-			System.Threading.Thread.Sleep(100);
-			crosshairWindow.Show();
-			
-			SetCursorPos(init_x, init_y);
-		}
-
 		private void Xenax_PositionSpeedAccUpdated(object sender, EventArgs e)
 		{
 			Dispatcher.Invoke(() =>
@@ -833,6 +750,91 @@ namespace JennyScienceControllerGUI
 			handle.StageCycleReturning = false;
 			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+		}
+
+		private void Xenax_PositionReached(object sender, EventArgs e)
+		{
+			//this gets fired multiple times
+			//when motor is turned ON
+			//when position is reached
+
+			Dispatcher.Invoke(() =>
+			{
+				xenax1.PositionVelocityUpdated += ReadPosition;
+				xenax1.MotorGetPosition();
+
+				Trace.WriteLine("Xenax_PositionReached------------- pos=" + handle.StagePositionCurrent);
+
+				if (handle.StageCycleRunOnce)
+				{
+					Trace.WriteLine("handle.StageCycleRunOnce");
+
+					if (handle.StageCycleReturning == false)
+					{
+						if (handle.StageCycleClick) { performClick(); }
+
+						// Going from P1 to P2
+						Trace.WriteLine("Going from P1 to P2");
+						handle.StageCycleReturning = true;
+						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+					}
+					else
+					{
+						//returning from P2 to P1
+						Trace.WriteLine("returning from P2 to P1");
+						handle.StageCycleReturning = false;
+						System.Threading.Thread.Sleep(300);
+						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+
+						handle.StageCycleRunOnce = false;
+					}
+				}
+				else if (handle.StageCycle)
+				{
+					Trace.WriteLine("handle.StageCycle");
+
+					if (handle.StageCycleReturning == false)
+					{
+						if (handle.StageCycleClick) { performClick(); }
+
+						// Going from P1 to P2
+						Trace.WriteLine("Going from P1 to P2");
+						handle.StageCycleReturning = true;
+						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+					}
+					else
+					{
+						//returning from P2 to P1
+						Trace.WriteLine("returning from P2 to P1");
+						handle.StageCycleReturning = false;
+						System.Threading.Thread.Sleep(300);
+						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
+						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+					}
+				}
+			}
+			);
+		}
+
+		private void performClick()
+		{
+			//save current mouse position
+			int init_x, init_y;
+			GetCursorPosition(out init_x, out init_y);
+
+			//target location
+			Point p = convertUnitsToPixels(crosshairWindow.Left + crosshairWindow.Width / 2.0, crosshairWindow.Top + crosshairWindow.Height / 2.0);
+
+			crosshairWindow.Hide();
+			System.Threading.Thread.Sleep(100);
+			LeftMouseClick(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
+			System.Threading.Thread.Sleep(100);
+			crosshairWindow.Show();
+
+			SetCursorPos(init_x, init_y);
 		}
 
 		private void BtnStopTransition_Click(object sender, RoutedEventArgs e)

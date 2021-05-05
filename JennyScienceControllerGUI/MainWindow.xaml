@@ -60,7 +60,7 @@
             <StatusBarItem Grid.Column="0">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Always on top"/>
-                    <local:SimpleToggleButton x:Name="btnTopMost" Height="25" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
+                    <local:SimpleToggleButton x:Name="btnTopMost" Height="20" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
                     <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
                 </StackPanel>
             </StatusBarItem>

@@ -20,8 +20,8 @@ namespace JennyScienceControllerGUI
     /// </summary>
     public partial class SimpleToggleButton : UserControl
     {
-        Thickness leftSidePosition = new Thickness(-39, 0, 0, 0);
-        Thickness rightSidePosition = new Thickness(0, 0, -39, 0);
+        Thickness leftSidePosition = new Thickness(-48, 0, 0, 0); //-39
+        Thickness rightSidePosition = new Thickness(0, 0, -48, 0);
         SolidColorBrush backColorOFF = new SolidColorBrush(Color.FromRgb(180, 180, 180));
         //SolidColorBrush backColorON = new SolidColorBrush(Color.FromRgb(130, 190, 125));
         SolidColorBrush backColorON = new SolidColorBrush(Color.FromRgb(111, 204, 13));
