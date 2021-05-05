@@ -301,6 +301,32 @@ namespace JennyScienceControllerGUI
 				}
 			}
 		}
+
+		public uint StageCycleClickDelayStart;
+		public uint StageCycleClickDelayEnd;
+		public string StageCycleClickDelay
+		{
+			get
+			{
+				return this.StageCycleClickDelayStart + "ms; " + StageCycleClickDelayEnd + "ms";
+			}
+
+			set
+			{
+				if (value.Length > 6)
+				{
+
+					var s = value.Trim().ToLower();
+					s = s.Replace("ms", "");
+					var lines= s.Split(';');
+
+					UInt32.TryParse(lines[0], out StageCycleClickDelayStart);
+					UInt32.TryParse(lines[1], out StageCycleClickDelayEnd);
+
+					this.OnPropertyChanged("StageCycleClickDelay");
+				}
+			}
+		}
 		#endregion
 
 		public event PropertyChangedEventHandler PropertyChanged;

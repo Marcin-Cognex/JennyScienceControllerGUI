@@ -773,20 +773,11 @@ namespace JennyScienceControllerGUI
 					{
 						if (handle.StageCycleClick) { performClick(); }
 
-						// Going from P1 to P2
-						Trace.WriteLine("Going from P1 to P2");
-						handle.StageCycleReturning = true;
-						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+						GoFromP1toP2();
 					}
 					else
 					{
-						//returning from P2 to P1
-						Trace.WriteLine("returning from P2 to P1");
-						handle.StageCycleReturning = false;
-						System.Threading.Thread.Sleep(300);
-						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+						ReturnFromP2toP1();
 
 						handle.StageCycleRunOnce = false;
 					}
@@ -799,24 +790,35 @@ namespace JennyScienceControllerGUI
 					{
 						if (handle.StageCycleClick) { performClick(); }
 
-						// Going from P1 to P2
-						Trace.WriteLine("Going from P1 to P2");
-						handle.StageCycleReturning = true;
-						xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+						GoFromP1toP2();
 					}
 					else
 					{
-						//returning from P2 to P1
-						Trace.WriteLine("returning from P2 to P1");
-						handle.StageCycleReturning = false;
-						System.Threading.Thread.Sleep(300);
-						xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
-						xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
+						ReturnFromP2toP1();
 					}
 				}
 			}
 			);
+		}
+
+		private void GoFromP1toP2()
+		{
+			// Going from P1 to P2
+			Trace.WriteLine("Going from P1 to P2");
+			handle.StageCycleReturning = true;
+			System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayStart);
+			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
+			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
+		}
+
+		private void ReturnFromP2toP1()
+		{
+			//returning from P2 to P1
+			Trace.WriteLine("returning from P2 to P1");
+			handle.StageCycleReturning = false;
+			System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayEnd);
+			xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
+			xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
 		}
 
 		private void performClick()
