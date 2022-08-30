@@ -105,18 +105,18 @@ namespace JennyScienceControllerGUI
 			xenax1.DataReceived += Xenax1_DataReceived;
 			xenax1.DataSent += Xenax1_DataSent;
 
-            currentPositionTimer.Tick += CurrentPositionTimer_Tick;
+			currentPositionTimer.Tick += CurrentPositionTimer_Tick;
 			currentPositionTimer.Interval = TimeSpan.FromMilliseconds(250);
 		}
 
-        private void CurrentPositionTimer_Tick(object sender, EventArgs e)
-        {
+		private void CurrentPositionTimer_Tick(object sender, EventArgs e)
+		{
 			xenax1.MotorGetPosition();
-        }
+		}
 
-        #region Mouse move/click DLL imports
-        //This is a replacement for Cursor.Position in WinForms
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
+		#region Mouse move/click DLL imports
+		//This is a replacement for Cursor.Position in WinForms
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		static extern bool SetCursorPos(int x, int y);
 
 		/// <summary>
@@ -183,7 +183,7 @@ namespace JennyScienceControllerGUI
 			// WPF's physical unit size is calculated by taking the 
 			// "Device-Independant Unit Size" (always 1/96)
 			// and scaling it by the system DPI
-			screenUnitSize  = (1d / 96d) * (double)screenDPI;
+			screenUnitSize = (1d / 96d) * (double)screenDPI;
 		}
 
 		private Point convertPixelsToUnits(int x, int y)
@@ -203,7 +203,7 @@ namespace JennyScienceControllerGUI
 		{
 			getSystemScreenUnitSize();
 
-			
+
 
 			//Load connections
 			Properties.Settings.Default.Reload();
@@ -235,7 +235,7 @@ namespace JennyScienceControllerGUI
 		}
 
 		private void Xenax_StopMotion()
-        {
+		{
 			handle.StageCycleRunOnce = false;
 			handle.StageCycle = false;
 			xenax1.MotorStopMotion();
@@ -340,7 +340,7 @@ namespace JennyScienceControllerGUI
 					handle.StageMotorStatus = "Power ON";
 					break;
 				case MotorStatusEn.InMotion:
-                    handle.StageMotorStatus = "Moving...";
+					handle.StageMotorStatus = "Moving...";
 					break;
 				case MotorStatusEn.Error:
 					handle.StageMotorStatus = "Error";
@@ -659,7 +659,7 @@ namespace JennyScienceControllerGUI
 			//disconnect and save settings there
 			BtnDisconnectConnection_Click(sender, new RoutedEventArgs());
 
-			Properties.Settings.Default.Save(); 
+			Properties.Settings.Default.Save();
 		}
 
 		private void BtnPowerOn_Click(object sender, RoutedEventArgs e)
@@ -945,289 +945,289 @@ namespace JennyScienceControllerGUI
 			}
 		}
 
-        private void cbCycle_Checked(object sender, RoutedEventArgs e)
-        {
+		private void cbCycle_Checked(object sender, RoutedEventArgs e)
+		{
 			BtnGoPosition1_Click(sender, e);
 		}
 
-        private void btnTopMost_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-			if(btnTopMost.Toggled == false) { MainWindow1.Topmost = false; }
+		private void btnTopMost_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (btnTopMost.Toggled == false) { MainWindow1.Topmost = false; }
 			else { MainWindow1.Topmost = true; }
 		}
 
-        private void btnCycleRunOnce_Click(object sender, RoutedEventArgs e)
-        {
+		private void btnCycleRunOnce_Click(object sender, RoutedEventArgs e)
+		{
 			handle.StageCycleRunOnce = true;
 			BtnGoPosition1_Click(sender, e);
 		}
 
-        private void MainWindow1_StateChanged(object sender, EventArgs e)
-        {
+		private void MainWindow1_StateChanged(object sender, EventArgs e)
+		{
 			if (handle.StageCycleClick)
 			{
 				if (MainWindow1.WindowState == WindowState.Minimized)
-                {
+				{
 					crosshairWindow.Hide();
-                }
+				}
 				else
 				{
 					crosshairWindow.Show();
 				}
 			}
-        }
-    }
-
-
-
-    #region ValueConverters
-    public class IsConnectedConverter : IValueConverter
-		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				Int32 result;
-				Int32.TryParse(parameter.ToString(), out result);
-				if (result == 1)
-				{
-					if ((bool)value)
-						return "Stage Connected";
-					else
-						return "Stage Disconnected";
-				}
-				else if (result == 2)
-				{
-					if ((bool)value)
-						return "Stage 2 connected";
-					else
-						return "Stage 2 disconnected";
-				}
-				else
-				{
-					return "";
-				}
-			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (((string)value).Contains("disconnected"))
-					return false;
-				else
-					return true;
-			}
 		}
+	}
 
-		public class IsUseConverter : IValueConverter
+
+
+	#region ValueConverters
+	public class IsConnectedConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if ((UInt16)value == 2)
-					return true;
-				else
-					return false;
-
-			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+			Int32 result;
+			Int32.TryParse(parameter.ToString(), out result);
+			if (result == 1)
 			{
 				if ((bool)value)
-					return 2;
+					return "Stage Connected";
 				else
-					return 1;
+					return "Stage Disconnected";
+			}
+			else if (result == 2)
+			{
+				if ((bool)value)
+					return "Stage 2 connected";
+				else
+					return "Stage 2 disconnected";
+			}
+			else
+			{
+				return "";
 			}
 		}
 
-		public class SlSpeedConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value is UInt64)
-					return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxSpeed) * 100;
-				return 0.0;
+			if (((string)value).Contains("disconnected"))
+				return false;
+			else
+				return true;
+		}
+	}
 
-			}
+	public class IsUseConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if ((UInt16)value == 2)
+				return true;
+			else
+				return false;
 
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-
-				return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxSpeed));
-			}
 		}
 
-		public class SlPositionLinConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value is UInt64)
-					return (((UInt64)value / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100);
-				return 0.0;
-			}
+			if ((bool)value)
+				return 2;
+			else
+				return 1;
+		}
+	}
 
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxPositionLinear));
-			}
+	public class SlSpeedConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is UInt64)
+				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxSpeed) * 100;
+			return 0.0;
+
 		}
 
-		public class TbSpeedConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value is UInt64)
-					return value.ToString();
-				return null;
-			}
 
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				try
-				{
-					if (value is string)
-						return UInt64.Parse((string)value);
-					return 0;
-				}
-				catch
-				{
-					return 0;
-				}
-			}
+			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxSpeed));
+		}
+	}
+
+	public class SlPositionLinConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is UInt64)
+				return (((UInt64)value / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100);
+			return 0.0;
 		}
 
-	
-		public class SlAccConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value is UInt64)
-					return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxAcc) * 100;
-				return 0.0;
+			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxPositionLinear));
+		}
+	}
 
-			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-
-				return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxAcc));
-			}
+	public class TbSpeedConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is UInt64)
+				return value.ToString();
+			return null;
 		}
 
-		public class TbAccConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+			try
 			{
-				if (value is UInt64)
-					return value.ToString();
-				return null;
+				if (value is string)
+					return UInt64.Parse((string)value);
+				return 0;
 			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+			catch
 			{
-				try
-				{
-					if (value is string)
-						return UInt64.Parse((string)value);
-					return 0;
-				}
-				catch
-				{
-					return 0;
-				}
+				return 0;
 			}
 		}
+	}
 
-		public class TbPositionConverter : IValueConverter
+
+	public class SlAccConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if (value is Int64)
-					return value.ToString();
-				return null;
-			}
+			if (value is UInt64)
+				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxAcc) * 100;
+			return 0.0;
 
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				try
-				{
-					if (value is string)
-						return Int64.Parse((string)value);
-					return 0;
-				}
-				catch
-				{
-					return 0;
-				}
-			}
 		}
 
-		public class StageTypeConverter : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+
+			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxAcc));
+		}
+	}
+
+	public class TbAccConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is UInt64)
+				return value.ToString();
+			return null;
+		}
+
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			try
 			{
-				if (value is StageTypeEn)
+				if (value is string)
+					return UInt64.Parse((string)value);
+				return 0;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+	}
+
+	public class TbPositionConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is Int64)
+				return value.ToString();
+			return null;
+		}
+
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			try
+			{
+				if (value is string)
+					return Int64.Parse((string)value);
+				return 0;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+	}
+
+	public class StageTypeConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is StageTypeEn)
+			{
+				if ((StageTypeEn)value == StageTypeEn.Rotation)
+					return "Rotation";
+				else
+					return "Linear";
+			}
+			return null;
+		}
+
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			try
+			{
+				if (value is string)
 				{
-					if ((StageTypeEn)value == StageTypeEn.Rotation)
-						return "Rotation";
+					if (String.Compare((string)value, "Rotation") == 0)
+						return StageTypeEn.Rotation;
 					else
-						return "Linear";
+						return StageTypeEn.Linear;
 				}
-				return null;
+				return 0;
 			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+			catch
 			{
-				try
-				{
-					if (value is string)
-					{
-						if (String.Compare((string)value, "Rotation") == 0)
-							return StageTypeEn.Rotation;
-						else
-							return StageTypeEn.Linear;
-					}
-					return 0;
-				}
-				catch
-				{
-					return 0;
-				}
+				return 0;
 			}
 		}
+	}
 
-		public class ConnectStatusConverter : IValueConverter
+	public class ConnectStatusConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if ((bool)value)
-					return "Disconnect";
-				else
-					return "Connect";
+			if ((bool)value)
+				return "Disconnect";
+			else
+				return "Connect";
 
-			}
-
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-
-				throw new NotImplementedException();
-
-			}
 		}
 
-		public class StageConnectionSelected : IValueConverter
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-				if ((bool)value)
-					return "Disconnect";
-				else
-					return "Connect";
 
-			}
+			throw new NotImplementedException();
 
-			object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-			{
-
-				throw new NotImplementedException();
-
-			}
 		}
-		#endregion
+	}
+
+	public class StageConnectionSelected : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if ((bool)value)
+				return "Disconnect";
+			else
+				return "Connect";
+
+		}
+
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+
+			throw new NotImplementedException();
+
+		}
+	}
+	#endregion
 }

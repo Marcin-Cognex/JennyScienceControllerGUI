@@ -55,10 +55,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>817904F57C858F22539A4017055955F6AB634E36</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BAC8F5FF9E1BDDF020DDB94DF2D4ABA9F2C13671</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>JennyScienceControllerGUI_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>JennyScienceControllerGUI_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -68,6 +68,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>JennyScienceControllerGUI-logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -150,8 +156,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="JennyScienceControllerGUI_1_TemporaryKey.pfx" />
     <None Include="JennyScienceControllerGUI_TemporaryKey.pfx" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
