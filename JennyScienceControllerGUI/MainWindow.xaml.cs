@@ -771,10 +771,9 @@ namespace JennyScienceControllerGUI
 
 					if (handle.StageCycleReturning == false)
 					{
-						if (handle.StageCycleClick) { performClick(); }
-
 						GoFromP1toP2();
-					}
+                        if (handle.StageCycleClick) { performClick(); }
+                    }
 					else
 					{
 						ReturnFromP2toP1();
@@ -788,10 +787,9 @@ namespace JennyScienceControllerGUI
 
 					if (handle.StageCycleReturning == false)
 					{
-						if (handle.StageCycleClick) { performClick(); }
-
 						GoFromP1toP2();
-					}
+                        if (handle.StageCycleClick) { performClick(); }
+                    }
 					else
 					{
 						ReturnFromP2toP1();
@@ -806,10 +804,10 @@ namespace JennyScienceControllerGUI
 			// Going from P1 to P2
 			Trace.WriteLine("Going from P1 to P2");
 			handle.StageCycleReturning = true;
-			System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayStart);
 			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
-		}
+            System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayStart);
+        }
 
 		private void ReturnFromP2toP1()
 		{
