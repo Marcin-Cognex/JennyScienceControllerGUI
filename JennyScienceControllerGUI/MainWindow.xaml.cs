@@ -411,12 +411,14 @@ namespace JennyScienceControllerGUI
 		{
 			Dispatcher.Invoke(() =>
 			{
-				//TextRange tr = new TextRange(txtCommandHistory.Document.ContentEnd, txtCommandHistory.Document.ContentEnd);
-				//tr.Text = "\r\n--> " + e.Data;
-				//tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                string s = e.Data;
+                if (s.Contains(Environment.NewLine)) { s = s.Replace(Environment.NewLine, "<CRLF>"); }
+                TextRange tr = new TextRange(txtCommandHistory.Document.ContentEnd, txtCommandHistory.Document.ContentEnd);
+				tr.Text = s + Environment.NewLine;
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Blue);
 
-				txtCommandHistory.AppendText("\r\n--> " + e.Data);
-			}
+                //txtCommandHistory.AppendText("\r\n--> " + e.Data);
+            }
 			);
 		}
 
@@ -424,7 +426,13 @@ namespace JennyScienceControllerGUI
 		{
 			Dispatcher.Invoke(() =>
 			{
-				txtCommandHistory.AppendText("\r\n" + e.Data);
+				string s = e.Data;
+				if (s.Contains(Environment.NewLine)) { s = s.Replace(Environment.NewLine, "<CRLF>"); }
+				TextRange tr = new TextRange(txtCommandHistory.Document.ContentEnd, txtCommandHistory.Document.ContentEnd);
+				tr.Text = s + Environment.NewLine;
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGreen);
+
+				//txtCommandHistory.AppendText("\r\n" + e.Data);
 			}
 			);
 		}
@@ -829,9 +837,9 @@ namespace JennyScienceControllerGUI
 			Point p = convertUnitsToPixels(crosshairWindow.Left + crosshairWindow.Width / 2.0, crosshairWindow.Top + crosshairWindow.Height / 2.0);
 
 			crosshairWindow.Hide();
-			System.Threading.Thread.Sleep(100);
+			System.Threading.Thread.Sleep(50);
 			LeftMouseClick(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
-			System.Threading.Thread.Sleep(100);
+			System.Threading.Thread.Sleep(50);
 			crosshairWindow.Show();
 
 			SetCursorPos(init_x, init_y);
@@ -859,46 +867,46 @@ namespace JennyScienceControllerGUI
 			xenax1.MotorClearPosition();
 		}
 
-		private void BtnImport_Click(object sender, RoutedEventArgs e)
-		{
-			try
-			{
-				OpenFileDialog openFileDialog = new OpenFileDialog();
-				openFileDialog.Multiselect = true;
-				openFileDialog.Filter = "Text files (*.xml)|*.txt|All files (*.*)|*.*";
-				openFileDialog.Multiselect = true;
-				if (openFileDialog.ShowDialog() == true)
-				{
-					XmlSerializer serializer = new XmlSerializer(typeof(XenaxStageGUIControlVM));
-					// A FileStream is needed to read the XML document.
-					FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open);
+		//private void BtnImport_Click(object sender, RoutedEventArgs e)
+		//{
+		//	try
+		//	{
+		//		OpenFileDialog openFileDialog = new OpenFileDialog();
+		//		openFileDialog.Multiselect = true;
+		//		openFileDialog.Filter = "Text files (*.xml)|*.txt|All files (*.*)|*.*";
+		//		openFileDialog.Multiselect = true;
+		//		if (openFileDialog.ShowDialog() == true)
+		//		{
+		//			XmlSerializer serializer = new XmlSerializer(typeof(XenaxStageGUIControlVM));
+		//			// A FileStream is needed to read the XML document.
+		//			FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open);
 
-					/* Use the Deserialize method to restore the object's state with
-					data from the XML document. */
-					handle = (XenaxStageGUIControlVM)serializer.Deserialize(fs);
-				}
-			}
-			catch
-			{ }
-		}
+		//			/* Use the Deserialize method to restore the object's state with
+		//			data from the XML document. */
+		//			handle = (XenaxStageGUIControlVM)serializer.Deserialize(fs);
+		//		}
+		//	}
+		//	catch
+		//	{ }
+		//}
 
-		private void BtnExport_Click(object sender, RoutedEventArgs e)
-		{
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-			saveFileDialog.Filter = "Text files (*.xml)|*.txt|All files (*.*)|*.*";
-			saveFileDialog.DefaultExt = "xml";
-			saveFileDialog.AddExtension = true;
+		//private void BtnExport_Click(object sender, RoutedEventArgs e)
+		//{
+		//	SaveFileDialog saveFileDialog = new SaveFileDialog();
+		//	saveFileDialog.Filter = "Text files (*.xml)|*.txt|All files (*.*)|*.*";
+		//	saveFileDialog.DefaultExt = "xml";
+		//	saveFileDialog.AddExtension = true;
 
-			if (saveFileDialog.ShowDialog() == true)
-			{
-				System.IO.FileStream fs = (System.IO.FileStream)saveFileDialog.OpenFile();
-				XmlSerializer serializer = new XmlSerializer(typeof(XenaxStageGUIExportable));
-				XenaxStageGUIExportable ex = new XenaxStageGUIExportable(handle);
-				TextWriter writer = new StreamWriter(fs);
-				serializer.Serialize(writer, ex);
-				fs.Close();
-			}
-		}
+		//	if (saveFileDialog.ShowDialog() == true)
+		//	{
+		//		System.IO.FileStream fs = (System.IO.FileStream)saveFileDialog.OpenFile();
+		//		XmlSerializer serializer = new XmlSerializer(typeof(XenaxStageGUIExportable));
+		//		XenaxStageGUIExportable ex = new XenaxStageGUIExportable(handle);
+		//		TextWriter writer = new StreamWriter(fs);
+		//		serializer.Serialize(writer, ex);
+		//		fs.Close();
+		//	}
+		//}
 
 		private void BtnReadSpeed2_Click(object sender, RoutedEventArgs e)
 		{

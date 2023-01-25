@@ -308,7 +308,7 @@ namespace JennyScienceControllerGUI
 		{
 			get
 			{
-				return this.StageCycleClickDelayStart + "ms; " + StageCycleClickDelayEnd + "ms";
+				return $"{this.StageCycleClickDelayStart} ms; {StageCycleClickDelayEnd} ms";
 			}
 
 			set

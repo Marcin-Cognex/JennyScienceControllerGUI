@@ -7,7 +7,7 @@
         xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
         
         mc:Ignorable="d"
-        Title="Cognex - Xenax controller" Height="550"  MinHeight="450" ResizeMode="CanResize" Width="670"  MinWidth="550" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
+        Title="Cognex - Xenax controller" Height="525"  MinHeight="525" ResizeMode="CanResize" Width="605"  MinWidth="605" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
     <Window.DataContext>
         <local:XenaxStageGUIControlVM/>
     </Window.DataContext>
@@ -49,10 +49,11 @@
                 <ItemsPanelTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="135"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="85"/>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -71,6 +72,9 @@
                     <Label Content="Current position"/>
                     <Label Grid.Column="3" Content="{Binding Path=StagePositionCurrent, Mode=OneWay}"/>
                 </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4">
+                <Button Content="Clear Pos." Margin="10,5,0,5" Click="BtnClearPosition_Click" MinWidth="60" Width="60"/>
             </StatusBarItem>
         </StatusBar>
 
@@ -273,11 +277,8 @@
                             <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                             <Label Content="Delay" Margin="5,4,0,5" VerticalAlignment="Center"/>
-                            <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="100" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="-3,5,5,5"/>
+                            <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="120" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,5,5"/>
                         </DockPanel>
-
-                        <Button Name="btnImport" Grid.Column="4"  Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>
-                        <Button Name="btnExport" Grid.Column="5" Grid.Row="9" Content="Export" Margin="5" Click="BtnExport_Click"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
@@ -381,7 +382,7 @@
                         <!--Rotate Right-->
                         <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Clockwise" Margin="10,5" Click="BtnClockwise_Click"/>
                         <!--Stop button-->
-                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="Stop" Margin="10,5" Click="BtnStopInfinite_Click"/>
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStopInfinite_Click"/>
 
                         <!--Position Control-->
                         <Label Grid.Column="2"  Grid.Row="6" Grid.ColumnSpan="2" Content="Position Control" Margin="10,5" HorizontalAlignment="Center"/>
@@ -389,12 +390,12 @@
 
                         <!--Position 1-->
                         <DockPanel Grid.Column="0" Grid.Row ="7" HorizontalAlignment="Left" Grid.ColumnSpan="6">
-                            <Button Content="Go Position 1" Margin="10,5" Click="BtnGoPosition1_Click" MinWidth="100"/>
-                            <TextBox Text="{Binding Path=StagePosition1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Button Content="Go Position 1" Margin="10,5" Click="BtnGoPosition1_Click" MinWidth="90"/>
+                            <TextBox Text="{Binding Path=StagePosition1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
                             <Label Content="Inc"/>
                             <Button Content="*" Width="20" Margin="5" Click="BtnReadPosition1_Click" ToolTip="Read current position."/>
                             <Label Content="Speed to P1"/>
-                            <TextBox Text="{Binding Path=StageSpeedP2P1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <TextBox Text="{Binding Path=StageSpeedP2P1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="70"  VerticalContentAlignment="Center" Margin="5"/>
                             <Label Content="Inc/s"/>
                             <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed1_Click" ToolTip="Read current speed."/>
                         </DockPanel>
@@ -402,29 +403,23 @@
 
                         <!--Position 2-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="8" HorizontalAlignment="Left" >
-                            <Button Grid.Column="0" Grid.Row="8" Content="Go Position 2" Margin="10,5" Click="BtnGoPosition2_Click" MinWidth="100"/>
-                            <TextBox Text="{Binding Path=StagePosition2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="100"  VerticalContentAlignment="Center" Margin="5"/>
+                            <Button Grid.Column="0" Grid.Row="8" Content="Go Position 2" Margin="10,5" Click="BtnGoPosition2_Click" MinWidth="90"/>
+                            <TextBox Text="{Binding Path=StagePosition2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
                             <Label Content="Inc"/>
                             <Button Content="*" Width="20" Margin="5" Click="BtnReadPosition2_Click" ToolTip="Read current position."/>
                             <Label Content="Speed to P2"/>
-                            <TextBox Text="{Binding Path=StageSpeedP1P2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="80"  VerticalContentAlignment="Center" Margin="5"/>
+                            <TextBox Text="{Binding Path=StageSpeedP1P2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Right" Width="70"  VerticalContentAlignment="Center" Margin="5"/>
                             <Label Content="Inc/s"/>
                             <Button Content="*" Width="20" Margin="5" Click="BtnReadSpeed2_Click" ToolTip="Read current speed."/>
                         </DockPanel>
-                        <!--Stop button
-                                    <Button Name="btnStopTransition"  Grid.Column="2" Grid.Row="7" Grid.RowSpan="2" Content="Stop" Margin="10,5" Click="BtnStopTransition_Click"/>-->
-
-                        <Button Grid.Column="4" Grid.Row="9" Content="Import" Margin="5" Click="BtnImport_Click"/>
-                        <Button Grid.Column="5" Grid.Row="9" Content="Export" Margin="5" Click="BtnExport_Click"/>
                         
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
-                            <Button Content="Clear Pos." Margin="10,5,0,5" Click="BtnClearPosition_Click" MinWidth="60"/>
                             <Button Content="Cycle run once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleRunOnce_Click"/>
                             <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" Checked="cbCycle_Checked"/>
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                             <Label Content="Delay" Margin="5,4,0,5" VerticalAlignment="Center"/>
-                            <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="50" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="-3,5,5,5"/>
+                            <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="120" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,5,5"/>
                         </DockPanel>
                     </Grid>
                 </StackPanel>
@@ -444,8 +439,7 @@
                         <Button Grid.Column="1" Margin="5 10 0 10" Height="30" Content="Send" Click="SendButton_Click"/>
                     </Grid>
                     <Border BorderThickness="1" BorderBrush="Black">
-                        <RichTextBox x:Name="txtCommandHistory" FontFamily="Consolas" FontSize="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True" IsVisibleChanged="txtCommandHistory_IsVisibleChanged">
-
+                        <RichTextBox x:Name="txtCommandHistory" FontFamily="Consolas" FontSize="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True" IsVisibleChanged="txtCommandHistory_IsVisibleChanged" Block.LineHeight="2">
                         </RichTextBox>
                     </Border>
                 </DockPanel>

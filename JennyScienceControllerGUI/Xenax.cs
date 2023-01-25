@@ -548,7 +548,6 @@ namespace XenaxModel
                 {
                     string s = p.Groups[1].ToString();
 					_motorPosition = Convert.ToInt32(s);
-
                 }
                 catch { }
             }
@@ -562,7 +561,6 @@ namespace XenaxModel
 				{
 					string s = sp.Groups[1].ToString();
 					_motorSpeed = Convert.ToInt32(s);
-
 				}
 				catch { }
 			}
@@ -575,11 +573,9 @@ namespace XenaxModel
 				{
 					string s = sp.Groups[1].ToString();
 					_motorSpeed = Convert.ToInt32(s);
-
 				}
 				catch { }
 			}
-
 
 			//Acc read
 			regex = new Regex(@"AC\?\r\n([0-9]+)\r\n>");
@@ -590,7 +586,6 @@ namespace XenaxModel
 				{
 					string s = a.Groups[1].ToString();
 					_motorAcceleration = Convert.ToInt32(s);
-
 				}
 				catch { }
 			}
@@ -603,7 +598,6 @@ namespace XenaxModel
 				{
 					string s = a.Groups[1].ToString();
 					_motorAcceleration = Convert.ToInt32(s);
-
 				}
 				catch { }
 			}
@@ -673,7 +667,7 @@ namespace XenaxModel
 			OnDataReceived(new xenaxCommunicationEventArgs(data));
         }
        
-		//Sends TP command, call periodically to keep watch dog alive------------------------------------------------------------------
+		//Sends TP command, call periodically to keep watchdog alive ------------------------------------------------------------------
 		private void WatchDog()
 		{
 			Send("TP\r");
