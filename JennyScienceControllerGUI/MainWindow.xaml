@@ -53,7 +53,6 @@
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="85"/>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -72,9 +71,6 @@
                     <Label Content="Current position"/>
                     <Label Grid.Column="3" Content="{Binding Path=StagePositionCurrent, Mode=OneWay}"/>
                 </StackPanel>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="4">
-                <Button Content="Clear Pos." Margin="10,5,0,5" Click="BtnClearPosition_Click" MinWidth="60" Width="60"/>
             </StatusBarItem>
         </StatusBar>
 
@@ -420,6 +416,7 @@
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                             <Label Content="Delay" Margin="5,4,0,5" VerticalAlignment="Center"/>
                             <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="120" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,5,5"/>
+                            <Button Content="Clear Pos." Margin="10,5,0,5" Click="BtnClearPosition_Click" MinWidth="60" Width="60"/>
                         </DockPanel>
                     </Grid>
                 </StackPanel>
