@@ -43,14 +43,11 @@ namespace JennyScienceControllerGUI
 		{
 			InitializeComponent();
 
-			//this.Title += string.Format(" v{0}.{1}.{2}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build);
-
-			if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-			{
-				this.Title += "ver " +
-					System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.Major.ToString() + "." +
-					System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.Revision.ToString();
-			}
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                Version v = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                this.Title += $" ver. {v.Major}.{v.Revision}";
+            }
 
 			handle = this.DataContext as XenaxStageGUIControlVM;
 			DebounceTimer.Interval = TimeSpan.FromMilliseconds(50);
@@ -202,12 +199,6 @@ namespace JennyScienceControllerGUI
 
 		private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
 		{
-            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-            {
-                Version v = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
-				this.Title += $" ver. {v.Major}.{v.Revision}";
-            }
-
             getSystemScreenUnitSize();
 
 			//Load connections
