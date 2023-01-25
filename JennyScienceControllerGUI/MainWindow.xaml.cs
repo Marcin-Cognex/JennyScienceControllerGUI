@@ -22,6 +22,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Threading;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace JennyScienceControllerGUI
 {
@@ -201,9 +202,13 @@ namespace JennyScienceControllerGUI
 
 		private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
 		{
-			getSystemScreenUnitSize();
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                Version v = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+				this.Title += $" ver. {v.Major}.{v.Revision}";
+            }
 
-
+            getSystemScreenUnitSize();
 
 			//Load connections
 			Properties.Settings.Default.Reload();
