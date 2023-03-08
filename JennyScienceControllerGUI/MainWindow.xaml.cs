@@ -232,7 +232,7 @@ namespace JennyScienceControllerGUI
 
 		private void Xenax_StopMotion()
 		{
-			handle.StageCycleRunOnce = false;
+			handle.StageCycleOnce = false;
 			handle.StageCycle = false;
 			xenax1.MotorStopMotion();
 		}
@@ -767,11 +767,11 @@ namespace JennyScienceControllerGUI
 				xenax1.PositionVelocityUpdated += ReadPosition;
 				xenax1.MotorGetPosition();
 
-				Trace.WriteLine("Xenax_PositionReached------------- pos=" + handle.StagePositionCurrent);
+				Trace.WriteLine("Xenax_PositionReached ------------- pos=" + handle.StagePositionCurrent);
 
-				if (handle.StageCycleRunOnce)
+				if (handle.StageCycleOnce)
 				{
-					Trace.WriteLine("handle.StageCycleRunOnce");
+					Trace.WriteLine("handle.StageCycleOnce");
 
 					if (handle.StageCycleReturning == false)
 					{
@@ -781,8 +781,7 @@ namespace JennyScienceControllerGUI
 					else
 					{
 						ReturnFromP2toP1();
-
-						handle.StageCycleRunOnce = false;
+						handle.StageCycleOnce = false;
 					}
 				}
 				else if (handle.StageCycle)
@@ -802,23 +801,26 @@ namespace JennyScienceControllerGUI
 			}
 			);
 		}
-
+		Stopwatch stopwatchMovement = new Stopwatch();
 		private void GoFromP1toP2()
 		{
 			// Going from P1 to P2
-			Trace.WriteLine("Going from P1 to P2");
-			handle.StageCycleReturning = true;
+			Trace.WriteLine($"Going from P1 to P2. Timer start. Delay: {handle.StageCycleClickDelayStart}");
+            stopwatchMovement.Restart();
+            handle.StageCycleReturning = true;
 			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
-            System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayStart);
+			if (handle.StageCycleClickDelayStart > 0) { System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayStart); }
         }
 
 		private void ReturnFromP2toP1()
 		{
 			//returning from P2 to P1
-			Trace.WriteLine("returning from P2 to P1");
-			handle.StageCycleReturning = false;
-			System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayEnd);
+			Trace.WriteLine($"Returning from P2 to P1. Timer stop: {stopwatchMovement.ElapsedMilliseconds}ms. Delay: {handle.StageCycleClickDelayEnd}");
+            stopwatchMovement.Stop();
+			handle.MovementElapsedMilliseconds = stopwatchMovement.ElapsedMilliseconds;
+            handle.StageCycleReturning = false;
+			if (handle.StageCycleClickDelayEnd > 0) { System.Threading.Thread.Sleep((int)handle.StageCycleClickDelayEnd); }
 			xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
 		}
@@ -958,9 +960,9 @@ namespace JennyScienceControllerGUI
 			else { MainWindow1.Topmost = true; }
 		}
 
-		private void btnCycleRunOnce_Click(object sender, RoutedEventArgs e)
+		private void btnCycleOnce_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycleRunOnce = true;
+			handle.StageCycleOnce = true;
 			BtnGoPosition1_Click(sender, e);
 		}
 
@@ -1043,7 +1045,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is UInt64)
-				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxSpeed) * 100;
+				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxSpeed) * 100.0;
 			return 0.0;
 
 		}
@@ -1051,7 +1053,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 
-			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxSpeed));
+			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlVM.MaxSpeed));
 		}
 	}
 
@@ -1060,13 +1062,13 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is UInt64)
-				return (((UInt64)value / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100);
+				return (((UInt64)value / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100.0);
 			return 0.0;
 		}
 
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxPositionLinear));
+			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlVM.MaxPositionLinear));
 		}
 	}
 
@@ -1231,5 +1233,41 @@ namespace JennyScienceControllerGUI
 
 		}
 	}
-	#endregion
+
+    public class MovementElapsedTimeConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+			if (value is long)
+			{
+				if ((long)value < 1000)
+				{
+					return $"Elapsed time {value}ms";
+				}
+				else
+				{
+					return $"Elapsed time " + ((long)value / 1000.0).ToString("F1") + "ms";
+                }
+			}
+            return null;
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            try
+            {
+				if (value is string)
+				{
+					string s = ((string)value).Replace("Elapsed time", "").Replace("ms", "").Trim();
+					return long.Parse(s);
+				}
+                return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+    }
+    #endregion
 }

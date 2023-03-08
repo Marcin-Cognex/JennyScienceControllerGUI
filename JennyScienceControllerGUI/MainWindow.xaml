@@ -7,7 +7,7 @@
         xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
         
         mc:Ignorable="d"
-        Title="Cognex - Xenax controller" Height="525"  MinHeight="525" ResizeMode="CanResize" Width="605"  MinWidth="605" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
+        Title="Cognex - Xenax controller" Height="545" MinHeight="545" ResizeMode="CanResize" Width="615"  MinWidth="615" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
     <Window.DataContext>
         <local:XenaxStageGUIControlVM/>
     </Window.DataContext>
@@ -23,6 +23,7 @@
         <local:TbPositionConverter x:Key="tbPositionConverter"/>
         <local:ConnectStatusConverter x:Key="connectStatusConverter"/>
         <local:StageTypeConverter x:Key="StageTypeConverter"/>
+        <local:MovementElapsedTimeConverter x:Key="MovementElapsedTimeConverter"/>
         <Style x:Key="HeaderStyle" TargetType="Label">
             <Setter Property="MinHeight" Value="30" />
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -269,11 +270,12 @@
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
                             <!-- <Button Name="btnClearPosition" Grid.Column="0" Grid.Row="8" Content="Clear Position" Margin="10,5" Click="BtnClearPosition_Click" MinWidth="100"/> -->
-                            <Button Content="Cycle run once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleRunOnce_Click"/>
+                            <Button Content="Cycle once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleOnce_Click"/>
                             <CheckBox x:Name="cbCycle" IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                             <Label Content="Delay" Margin="5,4,0,5" VerticalAlignment="Center"/>
                             <TextBox ToolTip="Define delays. 1) After move started, but before click. 2) Before returning" Width="120" Text="{Binding Path=StageCycleClickDelay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HorizontalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Margin="0,5,5,5"/>
+                            <Label x:Name="lblElapsedTime" Content="{Binding Path=MovementElapsedMilliseconds, Mode=OneWay, Converter={StaticResource MovementElapsedTimeConverter}}" ToolTip="The time taken to reach position P2 since the start of the movement." VerticalAlignment="Center"/>
                         </DockPanel>
                     </Grid>
                 </StackPanel>
@@ -411,7 +413,7 @@
                         
                         <!--Cycle-->
                         <DockPanel Grid.Column="0" Grid.ColumnSpan="6" Grid.Row ="9" HorizontalAlignment="Left" >
-                            <Button Content="Cycle run once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleRunOnce_Click"/>
+                            <Button Content="Cycle once" Margin="10,5,0,5" Padding="5,0" Click="btnCycleOnce_Click"/>
                             <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" Checked="cbCycle_Checked"/>
                             <CheckBox IsChecked="{Binding Path=StageCycleClick, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Click" Margin="10,5,0,5" VerticalAlignment="Center" Click="ClickCheckBox_Click"/>
                             <Label Content="Delay" Margin="5,4,0,5" VerticalAlignment="Center"/>

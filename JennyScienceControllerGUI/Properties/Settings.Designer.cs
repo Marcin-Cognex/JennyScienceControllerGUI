@@ -12,7 +12,7 @@ namespace JennyScienceControllerGUI.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,20 +20,6 @@ namespace JennyScienceControllerGUI.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>myXenax|Linear|192.168.0.75</string>\r\n</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Connections {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Connections"]));
-            }
-            set {
-                this["Connections"] = value;
             }
         }
         
@@ -190,6 +176,20 @@ namespace JennyScienceControllerGUI.Properties {
             }
             set {
                 this["crosshairWindowTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
+            "org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <s" +
+            "tring>myXenax|Linear|192.168.0.75</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Connections {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Connections"]));
+            }
+            set {
+                this["Connections"] = value;
             }
         }
     }

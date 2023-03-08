@@ -13,6 +13,7 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Threading;
 using XenaxModel;
+using System.Diagnostics;
 
 namespace JennyScienceControllerGUI
 {
@@ -280,8 +281,8 @@ namespace JennyScienceControllerGUI
 			}
 		}
 
-		private bool _StageCycleRunOnce = false;
-		public bool StageCycleRunOnce { get => _StageCycleRunOnce; set => _StageCycleRunOnce = value; }
+		private bool _StageCycleOnce = false;
+		public bool StageCycleOnce { get => _StageCycleOnce; set => _StageCycleOnce = value; }
 
 		private bool _StageCycleClick;
 		public bool StageCycleClick
@@ -327,12 +328,29 @@ namespace JennyScienceControllerGUI
 				}
 			}
 		}
-		#endregion
+		
+        private long _MovementElapsedMilliseconds;
+        public long MovementElapsedMilliseconds
+        {
+            get
+            {
+                return this._MovementElapsedMilliseconds;
+            }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+            set
+            {
+                if (value != this._MovementElapsedMilliseconds)
+                {
+                    this._MovementElapsedMilliseconds = value;
 
+                    this.OnPropertyChanged("MovementElapsedMilliseconds");
+                }
+            }
+        }
 
+        #endregion
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
 		public void OnPropertyChanged(string propertyName)
 		{
