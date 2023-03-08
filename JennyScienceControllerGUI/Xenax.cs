@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace XenaxModel
 {
@@ -731,8 +732,8 @@ namespace XenaxModel
         }
         //-----------------------------------------------------------------------------------------------------------------------------
         public void MotorGoToPositionAbsolute(long position)
-        {
-			Send("G" + position + "\r");
+		{
+            Send($"G{position}\r");
         }
 		//-----------------------------------------------------------------------------------------------------------------------------
 		public void MotorGoInfiniteCounterClockwise()

@@ -234,7 +234,7 @@
                         <!--JOG Control-->
                         <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls (momentary buttons)" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
                         <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Left" Margin="10,5" Click="BtnJogLeft_Click" />
-                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStopInfinite_Click"/>
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStop_Click"/>
                         <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Right" Margin="10,5" Click="BtnJogRight_Click"/>
 
                         <!--Position Control-->
@@ -380,7 +380,7 @@
                         <!--Rotate Right-->
                         <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Clockwise" Margin="10,5" Click="BtnClockwise_Click"/>
                         <!--Stop button-->
-                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStopInfinite_Click"/>
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStop_Click"/>
 
                         <!--Position Control-->
                         <Label Grid.Column="2"  Grid.Row="6" Grid.ColumnSpan="2" Content="Position Control" Margin="10,5" HorizontalAlignment="Center"/>

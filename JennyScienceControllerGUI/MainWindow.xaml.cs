@@ -701,7 +701,7 @@ namespace JennyScienceControllerGUI
 			xenax1.MotorGoInfiniteClockwise();
 		}
 
-		private void BtnStopInfinite_Click(object sender, RoutedEventArgs e)
+		private void BtnStop_Click(object sender, RoutedEventArgs e)
 		{
 			Xenax_StopMotion();
 
@@ -744,14 +744,27 @@ namespace JennyScienceControllerGUI
 
 		private void BtnGoPosition1_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycleReturning = false;
+            if (xenax1.MotorStatus == MotorStatusEn.InMotion)
+			{
+				//BtnStop_Click(btnGoPosition1, e);
+				xenax1.MotorStopMotion();
+                //TODO: Should be done with await, because it will take some time till stop if deceleration is small. 
+            }
+			
+
+            handle.StageCycleReturning = false;
 			xenax1.MotorSetSpeed(handle.StageSpeedP2P1);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition1);
 		}
 
 		private void BtnGoPosition2_Click(object sender, RoutedEventArgs e)
 		{
-			handle.StageCycleReturning = false;
+			if (xenax1.MotorStatus == MotorStatusEn.InMotion)
+			{
+				xenax1.MotorStopMotion();
+			}
+
+            handle.StageCycleReturning = false;
 			xenax1.MotorSetSpeed(handle.StageSpeedP1P2);
 			xenax1.MotorGoToPositionAbsolute(handle.StagePosition2);
 		}
