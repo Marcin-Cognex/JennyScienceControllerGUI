@@ -58,7 +58,8 @@
     <ManifestCertificateThumbprint>E3F2A55A28B3F3CD60782E7B62504A6E79C26268</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>JennyScienceControllerGUI_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
