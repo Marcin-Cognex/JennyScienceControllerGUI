@@ -23,6 +23,7 @@ using System.IO;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Reflection;
+using System.Resources;
 
 namespace JennyScienceControllerGUI
 {
@@ -861,13 +862,13 @@ namespace JennyScienceControllerGUI
 			Xenax_StopMotion();
 		}
 
-		private void BtnJogLeft_Click(object sender, RoutedEventArgs e)
-		{
-			handle.StageCycle = false;
-			xenax1.MotorGoToPositionAbsolute(272000);
-		}
+        private void btnJogLeft_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            handle.StageCycle = false;
+            xenax1.MotorGoToPositionAbsolute(272000);
+        }
 
-		private void BtnJogRight_Click(object sender, RoutedEventArgs e)
+        private void BtnJogRight_Click(object sender, RoutedEventArgs e)
 		{
 			handle.StageCycle = false;
 			xenax1.MotorGoToPositionAbsolute(0);
@@ -969,11 +970,28 @@ namespace JennyScienceControllerGUI
 
 		private void btnTopMost_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			if (btnTopMost.Toggled == false) { MainWindow1.Topmost = false; }
-			else { MainWindow1.Topmost = true; }
+			MainWindow1.Topmost = btnTopMost.Toggled;
 		}
 
-		private void btnCycleOnce_Click(object sender, RoutedEventArgs e)
+        private void btnCompact_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+			if(btnCompact.Toggled)
+			{
+				this.MainWindow1.MinHeight = 80;
+                this.MainWindow1.Height = 80;
+				this.MainWindow1.MaxHeight = 80;
+				panelCompactMode.Visibility = Visibility.Visible;
+            }
+			else
+			{
+                panelCompactMode.Visibility = Visibility.Hidden;
+                this.MainWindow1.MaxHeight = double.PositiveInfinity;
+                this.MainWindow1.Height = 545;
+                this.MainWindow1.MinHeight = 545;
+            }
+        }
+
+        private void btnCycleOnce_Click(object sender, RoutedEventArgs e)
 		{
 			handle.StageCycleOnce = true;
 			BtnGoPosition1_Click(sender, e);
@@ -993,43 +1011,36 @@ namespace JennyScienceControllerGUI
 				}
 			}
 		}
-	}
+
+
+    }
 
 
 
-	#region ValueConverters
-	public class IsConnectedConverter : IValueConverter
+    #region ValueConverters
+    public class IsConnectedConverter : IValueConverter
 	{
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			Int32 result;
-			Int32.TryParse(parameter.ToString(), out result);
-			if (result == 1)
+			if ((bool)value)
 			{
-				if ((bool)value)
-					return "Stage Connected";
-				else
-					return "Stage Disconnected";
-			}
-			else if (result == 2)
-			{
-				if ((bool)value)
-					return "Stage 2 connected";
-				else
-					return "Stage 2 disconnected";
+				return Visibility.Visible;
 			}
 			else
 			{
-				return "";
+				return Visibility.Hidden;
 			}
+			//return "Disconnected";
 		}
+
 
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (((string)value).Contains("disconnected"))
-				return false;
-			else
+			if ((value is System.Windows.Visibility) &&
+				((System.Windows.Visibility)value) == Visibility.Visible)
 				return true;
+			else
+				return false;
 		}
 	}
 

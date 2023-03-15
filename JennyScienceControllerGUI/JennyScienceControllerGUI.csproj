@@ -189,5 +189,17 @@
   <ItemGroup>
     <Resource Include="JennyScienceControllerGUI-logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AlwaysVisible.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CloneToDesktop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Connected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Disconnected.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

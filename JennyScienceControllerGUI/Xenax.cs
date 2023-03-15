@@ -320,6 +320,7 @@ namespace XenaxModel
 		{
 			try
 			{
+				//TODO
 				//not sure if this is correct
 				//this functions is trowing error "cannot acces disposed object" on app exit and disconnect
 

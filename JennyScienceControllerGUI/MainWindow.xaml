@@ -7,7 +7,7 @@
         xmlns:uc="clr-namespace:JennyScienceControllerGUI.Resources"
         
         mc:Ignorable="d"
-        Title="Cognex - Xenax controller" Height="545" MinHeight="545" ResizeMode="CanResize" Width="615"  MinWidth="615" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
+        Title="Cognex - Xenax controller" Height="545" MinHeight="545" ResizeMode="CanResize" Width="620" MinWidth="620" Closing="Window_Closing" Topmost="True" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen" Icon="JennyScienceControllerGUI-logo.ico" StateChanged="MainWindow1_StateChanged">
     <Window.DataContext>
         <local:XenaxStageGUIControlVM/>
     </Window.DataContext>
@@ -36,47 +36,65 @@
 
     <!--Default grid definition-->
     <Grid Margin="0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55*"/>
-            <ColumnDefinition Width="266*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
+        <StatusBar Grid.Row="1">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="135"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="36"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="140"/>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Always on top"/>
-                    <local:SimpleToggleButton x:Name="btnTopMost" Height="20" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp"/>
-                    <!--<ToggleButton x:Name="btnTopMost"  Content="Always on Top" Click="ToggleButton_Click" Width="75"/>-->
+                    <!--<Label Content="Top most"/>-->
+                    <Image Source="/Resources/AlwaysVisible.png" Width="24" Height="24" Margin="3" ToolTip="Allways on top"/>
+                    <local:SimpleToggleButton x:Name="btnTopMost" Height="20" MouseLeftButtonUp="btnTopMost_MouseLeftButtonUp" ToolTip="Allways on top"/>
                 </StackPanel>
             </StatusBarItem>
-            <StatusBarItem Grid.Column="1" Name="StageConnectionStatus1" Content="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>
-            <StatusBarItem Grid.Column="2" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
-            <StatusBarItem Grid.Column="3">
+            <StatusBarItem Grid.Column="1">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Current position"/>
+                    <!--<Label Content="Compact mode"/>-->
+                    <Image Source="/Resources/CloneToDesktop.png" Width="24" Height="24" Margin="3" ToolTip="Compact mode"/>
+                    <local:SimpleToggleButton x:Name="btnCompact" Height="20" MouseLeftButtonUp="btnCompact_MouseLeftButtonUp" ToolTip="Compact mode"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2" Name="StageConnectionStatus1">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Connected.png" Width="24" Height="24" Margin="3" ToolTip="Connection status" Visibility="{Binding StageConnected, Converter={StaticResource isConnectedConverter}}"/>
+                    <!--<Image Source="/Resources/Disconnected.png" Width="32" Height="32" ToolTip="Disconnected"/>-->
+                    <!--<Image Source="{Binding Path=StageConnected ,Mode=OneWay, Converter={StaticResource isConnectedConverter}, ConverterParameter=1}" Width="20" Height="20" Margin="3" ToolTip="Compact mode"/>-->
+                    <!--Content=""  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center"/>-->
+                </StackPanel>
+            </StatusBarItem> 
+            <StatusBarItem Grid.Column="3" x:Name="StageMotorStatus" Content="{Binding Path=StageMotorStatus, Mode=OneWay}"  HorizontalContentAlignment="Center" Height="40" VerticalContentAlignment="Center" Margin="4,0,-4,0"/>
+            <StatusBarItem Grid.Column="4">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Position"/>
                     <Label Grid.Column="3" Content="{Binding Path=StagePositionCurrent, Mode=OneWay}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="5">
+                <StackPanel x:Name="panelCompactMode" Orientation="Horizontal" Visibility="Hidden">
+                    <Button Content="Cycle once" Padding="5,0" Click="btnCycleOnce_Click"/>
+                    <CheckBox IsChecked="{Binding Path=StageCycle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Cycle" Margin="10,5,0,5" VerticalAlignment="Center" ToolTip="Enable cycling between position 1 and 2" Checked="cbCycle_Checked"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
 
         <!-- Default Tab Control-->
-        <TabControl x:Name="TabControlAll" Margin="0" Grid.Row="0" TabStripPlacement="Left" Grid.ColumnSpan="2">
+        <TabControl x:Name="TabControlAll" Margin="0" Grid.Row="0" TabStripPlacement="Left">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="MinHeight" Value="50" />
@@ -233,9 +251,9 @@
 
                         <!--JOG Control-->
                         <Label Grid.Column="0" Grid.ColumnSpan="6"  Grid.Row="4" Content="JOG movement Controls (momentary buttons)" Margin="10,5" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
-                        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Left" Margin="10,5" Click="BtnJogLeft_Click" />
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="Left" Margin="10,5" PreviewMouseLeftButtonDown="btnJogLeft_MouseLeftButtonDown" PreviewMouseLeftButtonUp="BtnStop_Click"/>
                         <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Content="STOP" Margin="10,5" Click="BtnStop_Click"/>
-                        <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Right" Margin="10,5" Click="BtnJogRight_Click"/>
+                        <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Content="Right" Margin="10,5" PreviewMouseLeftButtonDown="BtnJogRight_Click" PreviewMouseLeftButtonUp="BtnStop_Click"/>
 
                         <!--Position Control-->
                         <Label Grid.Column="2"  Grid.Row="6" Grid.ColumnSpan="2" Content="Position Control" Margin="10,5" HorizontalAlignment="Center"/>
