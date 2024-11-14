@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace JennyScienceControllerGUI.Resources
+namespace XenaxControllerGUI.Resources
 {
 	/// <summary>
 	/// Interaction logic for StageConnection.xaml

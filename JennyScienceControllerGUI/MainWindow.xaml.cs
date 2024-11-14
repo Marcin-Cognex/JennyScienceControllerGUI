@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Globalization;
-using JennyScienceControllerGUI.Resources;
+using XenaxControllerGUI.Resources;
 using XenaxModel;
 using Microsoft.Win32;
 using System.Xml.Serialization;
@@ -25,7 +25,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
 
-namespace JennyScienceControllerGUI
+namespace XenaxControllerGUI
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -35,7 +35,7 @@ namespace JennyScienceControllerGUI
 	public partial class MainWindow : Window
 	{
 		Xenax xenax1 = new Xenax();
-		XenaxStageGUIControlVM handle;
+		XenaxStageGUIControlViewModel handle;
 		DispatcherTimer DebounceTimer = new DispatcherTimer();
 		Crosshair crosshairWindow = new Crosshair();
 		DispatcherTimer currentPositionTimer = new System.Windows.Threading.DispatcherTimer();
@@ -50,7 +50,7 @@ namespace JennyScienceControllerGUI
                 this.Title += $" ver. {v.Major}.{v.Revision}";
             }
 
-			handle = this.DataContext as XenaxStageGUIControlVM;
+			handle = this.DataContext as XenaxStageGUIControlViewModel;
 			DebounceTimer.Interval = TimeSpan.FromMilliseconds(50);
 			crosshairWindow.handle = handle;
 
@@ -444,7 +444,7 @@ namespace JennyScienceControllerGUI
 			if (!DebounceTimer.IsEnabled)
 			{
 				EventHandler MyDelegate = null;
-				MyDelegate = (senderi, ei) => { xenax1.MotorSetSpeed((uint)((((Slider)sender).Value / 100) * XenaxStageGUIControlVM.MaxSpeed)); DebounceTimer.Stop(); DebounceTimer.Tick -= MyDelegate; };
+				MyDelegate = (senderi, ei) => { xenax1.MotorSetSpeed((uint)((((Slider)sender).Value / 100) * XenaxStageGUIControlViewModel.MaxSpeed)); DebounceTimer.Stop(); DebounceTimer.Tick -= MyDelegate; };
 				DebounceTimer.Tick += MyDelegate;
 			}
 			DebounceTimer.Start();
@@ -459,7 +459,7 @@ namespace JennyScienceControllerGUI
 				EventHandler MyDelegate = null;
 				MyDelegate = (senderi, ei) =>
 				{
-					xenax1.MotorSetAcceleration((uint)((((Slider)sender).Value / 100) * XenaxStageGUIControlVM.MaxAcc)); DebounceTimer.Stop(); DebounceTimer.Tick -= MyDelegate;
+					xenax1.MotorSetAcceleration((uint)((((Slider)sender).Value / 100) * XenaxStageGUIControlViewModel.MaxAcc)); DebounceTimer.Stop(); DebounceTimer.Tick -= MyDelegate;
 				};
 				DebounceTimer.Tick += MyDelegate;
 			}
@@ -514,7 +514,7 @@ namespace JennyScienceControllerGUI
 					EventHandler MyDelegate = null;
 					MyDelegate = (senderi, ei) =>
 					{
-						xenax1.MotorGoToPositionAbsolute((long)(((((Slider)sender).Value) / 100) * XenaxStageGUIControlVM.MaxPositionLinear));
+						xenax1.MotorGoToPositionAbsolute((long)(((((Slider)sender).Value) / 100) * XenaxStageGUIControlViewModel.MaxPositionLinear));
 						DebounceTimer.Stop();
 						DebounceTimer.Tick -= MyDelegate;
 					};
@@ -534,7 +534,7 @@ namespace JennyScienceControllerGUI
 				EventHandler MyDelegate = null;
 				MyDelegate = (senderi, ei) =>
 				{
-					xenax1.MotorGoToPositionAbsolute((long)(((((Slider)sender).Value) / 100) * XenaxStageGUIControlVM.MaxPositionLinear));
+					xenax1.MotorGoToPositionAbsolute((long)(((((Slider)sender).Value) / 100) * XenaxStageGUIControlViewModel.MaxPositionLinear));
 					DebounceTimer.Stop();
 					DebounceTimer.Tick -= MyDelegate;
 				};
@@ -563,7 +563,7 @@ namespace JennyScienceControllerGUI
 		{
 			Dispatcher.Invoke(() =>
 			{
-				this.slPositionLin.Value = ((double)xenax1.MotorPosition / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100;
+				this.slPositionLin.Value = ((double)xenax1.MotorPosition / (double)XenaxStageGUIControlViewModel.MaxPositionLinear) * 100;
 				xenax1.PositionVelocityUpdated -= ReadPosition;
 			}
 			);
@@ -583,7 +583,7 @@ namespace JennyScienceControllerGUI
 					EventHandler MyDelegate = null;
 					MyDelegate = (senderi, ei) =>
 					{
-						long speed = (long)((((Slider)sender).Value / 100) * XenaxStageGUIControlVM.MaxSpeed);
+						long speed = (long)((((Slider)sender).Value / 100) * XenaxStageGUIControlViewModel.MaxSpeed);
 						xenax1.MotorSetSpeed((ulong)(speed >= 0 ? speed : speed * (-1)));
 						if (speed >= 0)
 							xenax1.MotorGoInfiniteClockwise();
@@ -1069,7 +1069,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is UInt64)
-				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxSpeed) * 100.0;
+				return ((UInt64)value / (double)XenaxStageGUIControlViewModel.MaxSpeed) * 100.0;
 			return 0.0;
 
 		}
@@ -1077,7 +1077,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 
-			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlVM.MaxSpeed));
+			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlViewModel.MaxSpeed));
 		}
 	}
 
@@ -1086,13 +1086,13 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is UInt64)
-				return (((UInt64)value / (double)XenaxStageGUIControlVM.MaxPositionLinear) * 100.0);
+				return (((UInt64)value / (double)XenaxStageGUIControlViewModel.MaxPositionLinear) * 100.0);
 			return 0.0;
 		}
 
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlVM.MaxPositionLinear));
+			return ((UInt64)(((double)value / 100.0) * XenaxStageGUIControlViewModel.MaxPositionLinear));
 		}
 	}
 
@@ -1126,7 +1126,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is UInt64)
-				return ((UInt64)value / (double)XenaxStageGUIControlVM.MaxAcc) * 100;
+				return ((UInt64)value / (double)XenaxStageGUIControlViewModel.MaxAcc) * 100;
 			return 0.0;
 
 		}
@@ -1134,7 +1134,7 @@ namespace JennyScienceControllerGUI
 		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 
-			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlVM.MaxAcc));
+			return ((UInt64)(((double)value / 100) * XenaxStageGUIControlViewModel.MaxAcc));
 		}
 	}
 

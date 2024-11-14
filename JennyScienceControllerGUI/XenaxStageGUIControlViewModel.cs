@@ -15,9 +15,9 @@ using System.Windows.Threading;
 using XenaxModel;
 using System.Diagnostics;
 
-namespace JennyScienceControllerGUI
+namespace XenaxControllerGUI
 {
-	public class XenaxStageGUIControlVM : INotifyPropertyChanged
+	public class XenaxStageGUIControlViewModel : INotifyPropertyChanged
 	{
 		//Upper and lower limits for input values
 		public const UInt64 MaxSpeed = 1000000;
@@ -359,7 +359,7 @@ namespace JennyScienceControllerGUI
 		}
 
 		//Default constructor loads values from project settings
-		public XenaxStageGUIControlVM()
+		public XenaxStageGUIControlViewModel()
 		{
 			StageSpeed = 0;
 			StageAcc = 0;
@@ -372,7 +372,7 @@ namespace JennyScienceControllerGUI
 		}
 
 		//Copy constructor
-		public XenaxStageGUIControlVM(XenaxStageGUIControlVM xenaxStageGUI)
+		public XenaxStageGUIControlViewModel(XenaxStageGUIControlViewModel xenaxStageGUI)
 		{
 			StageSpeed = xenaxStageGUI.StageSpeed;
 			StageAcc = xenaxStageGUI.StageAcc;
@@ -400,7 +400,7 @@ namespace JennyScienceControllerGUI
 		public XenaxStageGUIExportable()
 		{ }
 
-		public XenaxStageGUIExportable(XenaxStageGUIControlVM toExport)
+		public XenaxStageGUIExportable(XenaxStageGUIControlViewModel toExport)
 		{
 			StageSpeed = toExport.StageSpeed;
 			StageAcc = toExport.StageSpeed;

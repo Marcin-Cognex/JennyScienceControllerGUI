@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace JennyScienceControllerGUI
+namespace XenaxControllerGUI
 {
     /// <summary>
     /// Interaction logic for Crosshair.xaml
     /// </summary>
     public partial class Crosshair : Window
     {
-        public XenaxStageGUIControlVM handle;
+        public XenaxStageGUIControlViewModel handle;
 
         public Crosshair()
         {

@@ -26,8 +26,8 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>https://cognexxenaxcontroller.blob.core.windows.net/cognexxenaxcontroller/</UpdateUrl>
-    <ProductName>JennyScience Xenax Controller GUI</ProductName>
-    <PublisherName>Cognoids are awesome</PublisherName>
+    <ProductName>Xenax Controller GUI</ProductName>
+    <PublisherName>CogExtra Apps</PublisherName>
     <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
@@ -118,7 +118,7 @@
       <DependentUpon>SimpleToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xenax.cs" />
-    <Compile Include="XenaxStageGUIControlVM.cs" />
+    <Compile Include="XenaxStageGUIControlViewModel.cs" />
     <Page Include="Crosshair.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

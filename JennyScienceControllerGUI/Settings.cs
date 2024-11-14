@@ -1,4 +1,4 @@
-﻿namespace JennyScienceControllerGUI.Properties {
+﻿namespace XenaxControllerGUI.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

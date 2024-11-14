@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace JennyScienceControllerGUI
+namespace XenaxControllerGUI
 {
     /// <summary>
     /// Interaction logic for SimpleToggleButton.xaml

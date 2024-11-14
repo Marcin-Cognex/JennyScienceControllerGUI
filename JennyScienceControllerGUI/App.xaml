@@ -1,7 +1,7 @@
-﻿<Application x:Class="JennyScienceControllerGUI.App"
+﻿<Application x:Class="XenaxControllerGUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:JennyScienceControllerGUI"
+             xmlns:local="clr-namespace:XenaxControllerGUI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
