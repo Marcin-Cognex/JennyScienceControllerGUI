@@ -28,9 +28,9 @@
     <UpdateUrl>https://cognexxenaxcontroller.blob.core.windows.net/cognexxenaxcontroller/</UpdateUrl>
     <ProductName>Xenax Controller GUI</ProductName>
     <PublisherName>CogExtra Apps</PublisherName>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
+    <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -55,11 +55,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E3F2A55A28B3F3CD60782E7B62504A6E79C26268</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>EC3322C0AF38D2865D2C0A65A1C0372102A19B3A</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>XenaxControllerGUI2.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -164,6 +163,8 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="XenaxControllerGUI2.pfx" />
+    <None Include="XenaxControllerGUI_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
