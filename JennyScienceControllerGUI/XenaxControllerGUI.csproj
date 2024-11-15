@@ -26,10 +26,11 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>https://cognexxenaxcontroller.blob.core.windows.net/cognexxenaxcontroller/</UpdateUrl>
+    <TargetCulture>en-US</TargetCulture>
     <ProductName>Xenax Controller GUI</ProductName>
     <PublisherName>CogExtra Apps</PublisherName>
-    <ApplicationRevision>10</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationVersion>24.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -55,10 +56,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>EC3322C0AF38D2865D2C0A65A1C0372102A19B3A</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>2014283143B292E894CE90EFDC0BEC5F7848240A</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>XenaxControllerGUI2.pfx</ManifestKeyFile>
+    <ManifestKeyFile>CogExtra Apps.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -156,15 +157,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="JennyScienceControllerGUI_2_TemporaryKey.pfx" />
+    <None Include="CogExtra Apps.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="XenaxControllerGUI2.pfx" />
-    <None Include="XenaxControllerGUI_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

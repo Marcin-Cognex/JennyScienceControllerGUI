@@ -24,6 +24,7 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
+using System.Deployment.Application;
 
 namespace XenaxControllerGUI
 {
@@ -44,13 +45,27 @@ namespace XenaxControllerGUI
 		{
 			InitializeComponent();
 
-            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            try
             {
-                Version v = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
-                this.Title += $" ver. {v.Major}.{v.Revision}";
+                if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+                {
+                    System.Version version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                    this.Title += $" ver. {version.Major}.{version.Minor}.{version.Revision}";
+                }
+                else
+                {
+                    // Fallback to assembly version for debugging
+                    System.Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                    this.Title += $" ver. {version.Major}.{version.Minor}.{version.Revision} (Debug)";
+                }
+            }
+            catch (InvalidDeploymentException)
+            {
+                // Handle scenario where the application is not ClickOnce deployed
+                this.Title += " (Not Network Deployed)";
             }
 
-			handle = this.DataContext as XenaxStageGUIControlViewModel;
+            handle = this.DataContext as XenaxStageGUIControlViewModel;
 			DebounceTimer.Interval = TimeSpan.FromMilliseconds(50);
 			crosshairWindow.handle = handle;
 
